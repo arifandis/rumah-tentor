@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.cahstudio.rumahtentor">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/NoActionBar">
+        <activity android:name=".ui.admin.ChatTentorActivity"></activity>
+        <activity android:name=".ui.admin.OrderDetailAdminActivity" />
+        <activity android:name=".ui.admin.CreateScheduleActivity" />
+        <activity android:name=".ui.admin.SeeScheduleActivity" />
+        <activity android:name=".ui.admin.OrderListActivity" />
+        <activity android:name=".ui.admin.OnChatActivity" />
+        <activity android:name=".ui.tentor.ChatAdminActivity" />
+        <activity android:name=".ui.tentor.AnswerQuestionActivity" />
+        <activity android:name=".ui.student.AskQuestionActivity" />
+        <activity android:name=".ui.tentor.SeeScheduleTentorActivity" />
+        <activity android:name=".ui.student.SeeScheduleActivity" />
+        <activity android:name=".ui.student.PaymentActivity" />
+        <activity android:name=".ui.tentor.OrderDetailActivity" />
+        <activity android:name=".ui.tentor.ListOrderActivity" />
+        <activity android:name=".ui.student.OrderActivity" />
+        <activity android:name=".ui.tentor.ChooseCourseActivity" />
+        <activity android:name=".ui.tentor.ChooseLevelActivity" />
+        <activity android:name=".ui.admin.MainAdminActivity" />
+        <activity android:name=".ui.tentor.MainTentorActivity" />
+        <activity android:name=".ui.tentor.RegisterTentorActivity" />
+        <activity android:name=".ui.student.MainActivity" />
+        <activity android:name=".ui.student.RegisterActivity" />
+        <activity android:name=".ui.tentor.LoginTentorActivity" />
+        <activity android:name=".ui.admin.LoginAdminActivity" />
+        <activity android:name=".ui.student.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.com.vansuita.pickimage.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/picker_provider_paths" />
+        </provider>
+
+        <receiver android:name=".utils.NotificationReceiver" />
+    </application>
+
+</manifest>

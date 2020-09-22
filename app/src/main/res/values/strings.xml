@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Rumah Tentor</string>
+
+    <string name="login_login">Masuk</string>
+    <string name="login_label_question_register">Belum punya akun?</string>
+    <string name="login_register">Daftar</string>
+    <string name="login_login_as_tentor">Masuk Sebagai Tentor</string>
+    <string name="login_login_as_admin">Masuk Sebagai Admin</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+</resources>

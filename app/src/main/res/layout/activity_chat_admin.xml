@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.tentor.ChatAdminActivity">
+
+    <include
+        android:id="@+id/chatadmin_toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/chatadmin_msg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rounded_bg_transparent_outline_gray_30"
+        android:ems="10"
+        android:hint="Masukkan Pesan..."
+        android:inputType="text|textMultiLine|textShortMessage|textLongMessage|textPersonName"
+        android:maxLines="5"
+        android:padding="15dp"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/chatadmin_btnSend"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="RtlHardcoded,RtlSymmetry,UnknownId" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatadmin_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        tools:listitem="@layout/item_on_chat"
+        app:layout_constraintBottom_toTopOf="@+id/chatadmin_msg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chatadmin_toolbar" />
+
+    <ImageButton
+        android:id="@+id/chatadmin_btnSend"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/circle_bg_green"
+        android:padding="0dp"
+        android:rotation="90"
+        android:textAllCaps="false"
+        android:src="@drawable/ic_send"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/chatadmin_msg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/chatadmin_msg"
+        tools:ignore="RtlHardcoded" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

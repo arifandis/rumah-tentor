@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.tentor.LoginTentorActivity">
+
+    <ImageView
+        android:id="@+id/login_ivLogo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toTopOf="@+id/login_tilEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_tilEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/login_tilPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_ivLogo">
+
+        <EditText
+            android:id="@+id/login_etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_tilPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="30dp"
+        app:endIconMode="password_toggle"
+        app:layout_constraintBottom_toTopOf="@+id/login_btnLoginTentor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_tilEmail">
+
+        <EditText
+            android:id="@+id/login_etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_password"
+            android:inputType="textPassword"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/login_btnLoginTentor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/bg_button_maroon"
+        android:text="@string/login_login"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/login_tvQuestion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_tilPassword" />
+
+    <ProgressBar
+        android:id="@+id/login_progressbar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:elevation="2dp"
+        android:indeterminateTint="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/login_btnLoginTentor"
+        app:layout_constraintEnd_toEndOf="@+id/login_btnLoginTentor"
+        app:layout_constraintStart_toStartOf="@+id/login_btnLoginTentor"
+        app:layout_constraintTop_toTopOf="@+id/login_btnLoginTentor"
+        tools:targetApi="lollipop" />
+
+    <TextView
+        android:id="@+id/login_tvQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:text="@string/login_label_question_register"
+        android:textColor="@color/gray"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/login_tvRegister"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@+id/login_btnLoginTentor"
+        app:layout_constraintTop_toBottomOf="@+id/login_btnLoginTentor" />
+
+    <TextView
+        android:id="@+id/login_tvRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/login_register"
+        android:textColor="@color/red_maroon"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/login_btnLoginTentor"
+        app:layout_constraintStart_toEndOf="@id/login_tvQuestion"
+        app:layout_constraintTop_toBottomOf="@+id/login_btnLoginTentor" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

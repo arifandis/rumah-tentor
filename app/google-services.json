@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "885174890255",
+    "firebase_url": "https://rumah-tentor.firebaseio.com",
+    "project_id": "rumah-tentor",
+    "storage_bucket": "rumah-tentor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885174890255:android:e9d2fe7f57e90935eb587a",
+        "android_client_info": {
+          "package_name": "com.cahstudio.rumahtentor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885174890255-s7uo1u38ldu5qa537de87hf7ujcdmck1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_ifIbgQxGoEGhAU3GDRUw3YhhLjUg_Ho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885174890255-s7uo1u38ldu5qa537de87hf7ujcdmck1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.student.PaymentActivity">
+
+    <include
+        android:id="@+id/payment_toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/payment_tvLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:text="Pilih cara pembayaran"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/payment_toolbar" />
+
+    <RadioGroup
+        android:id="@+id/payment_radiogroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/payment_tvLabel">
+
+        <RadioButton
+            android:id="@+id/payment_rbtnOffline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Offline"
+            android:textColor="@color/black"/>
+
+        <RadioButton
+            android:id="@+id/payment_rbtnTransfer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Transfer"
+            android:textColor="@color/black"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/payment_layoutProof"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/payment_radiogroup">
+
+        <TextView
+            android:id="@+id/payment_tvLabelProof"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
+            android:text="Upload bukti pembayaran"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/payment_radiogroup" />
+
+        <TextView
+            android:id="@+id/payment_tvTranfer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp"
+            android:text="Transfer ke nomor rekening 666 dengan total pembayaran Rp. 0"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/payment_tvLabelProof" />
+
+        <ImageView
+            android:id="@+id/payment_ivProof"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/payment_tvTranfer" />
+
+        <Button
+            android:id="@+id/payment_btnUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/bg_button_maroon"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="upload bukti"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/payment_ivProof" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/payment_btnConfirm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/bg_button_maroon"
+        android:text="konfirmasi"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/payment_progressbar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:elevation="2dp"
+        android:indeterminateTint="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/payment_btnConfirm"
+        app:layout_constraintEnd_toEndOf="@+id/payment_btnConfirm"
+        app:layout_constraintStart_toStartOf="@+id/payment_btnConfirm"
+        app:layout_constraintTop_toTopOf="@+id/payment_btnConfirm"
+        tools:targetApi="lollipop" />
+</androidx.constraintlayout.widget.ConstraintLayout>
