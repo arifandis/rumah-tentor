@@ -38,7 +38,7 @@ class LoginAdminActivity : AppCompatActivity(), View.OnClickListener {
 
         login_btnLogin.setOnClickListener(this)
 
-        checkUserLoggedIn()
+//        checkUserLoggedIn()
     }
 
     fun checkForm(){
@@ -58,7 +58,7 @@ class LoginAdminActivity : AppCompatActivity(), View.OnClickListener {
             if (it.isSuccessful){
                 mPrefEditor.putString("mode", "admin")
                 mPrefEditor.apply()
-                checkUserLoggedIn()
+                updateToken()
             }else{
                 login_btnLogin.text = "Masuk"
                 login_progressbar.visibility = View.GONE

@@ -128,11 +128,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     loadingDialog?.dismiss()
-                    mStudent = Student(it
-                        , snapshot.child("name").getValue(String::class.java)
-                        , snapshot.child("email").getValue(String::class.java)
-                        , snapshot.child("status").getValue(String::class.java)
-                        , snapshot.child("current_order").getValue(String::class.java))
+//                    mStudent = Student(it
+//                        , snapshot.child("name").getValue(String::class.java)
+//                        , snapshot.child("email").getValue(String::class.java)
+//                        , snapshot.child("status").getValue(String::class.java)
+//                        , snapshot.child("current_order").getValue(String::class.java))
+                    mStudent = snapshot.getValue(Student::class.java)
                 }
 
             })
