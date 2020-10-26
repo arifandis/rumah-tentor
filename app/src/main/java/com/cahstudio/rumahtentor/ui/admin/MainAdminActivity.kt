@@ -40,10 +40,10 @@ class MainAdminActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(Intent(this, OrderListActivity::class.java))
             }
             R.id.main_cvSeeSchedule -> {
-
+                startActivity(Intent(this, ScheduleListActivity::class.java))
             }
             R.id.main_cvChatTentor -> {
-
+                startActivity(Intent(this, ChatTentorActivity::class.java))
             }
             R.id.main_ivLogout -> {
                 mPref.clear()

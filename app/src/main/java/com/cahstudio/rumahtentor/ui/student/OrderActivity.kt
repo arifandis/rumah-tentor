@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cahstudio.rumahtentor.R
 import com.cahstudio.rumahtentor.model.Course
@@ -16,6 +17,7 @@ import com.cahstudio.rumahtentor.model.Day
 import com.cahstudio.rumahtentor.model.Order
 import com.cahstudio.rumahtentor.model.Tentor
 import com.cahstudio.rumahtentor.ui.student.adapter.DayAdapter
+import com.cahstudio.rumahtentor.ui.tentor.adapter.ChooseCourseAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -32,10 +34,12 @@ class OrderActivity : AppCompatActivity() {
     private lateinit var mUserFirebase: FirebaseUser
     private lateinit var sCourseAdapter: ArrayAdapter<String>
     private lateinit var sTentorAdapter: ArrayAdapter<String>
+    private lateinit var mCourseAdapter: ChooseCourseAdapter
 
     private var mDayList = mutableListOf<Day>()
     private var mChoosedDayList = mutableListOf<Day>()
     private var mCourseList = mutableListOf<Course>()
+    private var mChooseCourseList = mutableListOf<Course>()
     private var mTentorList = mutableListOf<Tentor>()
     private var sCourseList = mutableListOf<String>()
     private var sTentorList = mutableListOf<String>()
@@ -44,6 +48,7 @@ class OrderActivity : AppCompatActivity() {
     private var tentorUid = ""
     private var keyOrder: String? = ""
     private var countDay = 0
+    private var sCourse = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +102,7 @@ class OrderActivity : AppCompatActivity() {
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                getTentor()
+
             }
 
         }
@@ -116,6 +121,12 @@ class OrderActivity : AppCompatActivity() {
         order_btnOrder.setOnClickListener {
             orderTentor()
         }
+
+        val courseLayoutManager = GridLayoutManager(this,3)
+        mCourseAdapter = ChooseCourseAdapter(this, mCourseList, {course -> addCourse(course) }
+            , {course -> removeCourse(course) })
+        order_rvCourse.layoutManager = courseLayoutManager
+        order_rvCourse.adapter = mCourseAdapter
 
         val layoutManager = LinearLayoutManager(this)
         mDayList.add(Day("Senin"))
@@ -169,7 +180,6 @@ class OrderActivity : AppCompatActivity() {
     }
 
     fun getCourse(){
-        mCourseList.clear()
         sCourseList.clear()
         sCourseList.add("Pilih pelajaran")
         sCourseAdapter.notifyDataSetChanged()
@@ -179,6 +189,7 @@ class OrderActivity : AppCompatActivity() {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
+                mCourseList.clear()
                 for (ds in snapshot.children){
                     val course = ds.getValue(Course::class.java) ?: return
 
@@ -192,11 +203,37 @@ class OrderActivity : AppCompatActivity() {
                             sCourseList.add(course)
                         }
                     }
-                    sCourseAdapter.notifyDataSetChanged()
+                    mCourseAdapter.notifyDataSetChanged()
                 }
             }
 
         })
+    }
+
+    fun addCourse(course: Course){
+        sCourse = ""
+        mChooseCourseList.add(course)
+        mChooseCourseList.forEach {
+            sCourse += if (sCourse.isEmpty()){
+                it.id.toString()
+            }else{
+                ",${it.id.toString()}"
+            }
+        }
+        getTentor()
+    }
+
+    fun removeCourse(course: Course){
+        sCourse = ""
+        mChooseCourseList.remove(course)
+        mChooseCourseList.forEach {
+            sCourse += if (sCourse.isEmpty()){
+                it.id.toString()
+            }else{
+                ",${it.id.toString()}"
+            }
+        }
+        getTentor()
     }
 
     fun getTentor(){
@@ -219,10 +256,13 @@ class OrderActivity : AppCompatActivity() {
                 if (mCourseList.isNotEmpty()){
                     mTentorList.forEach {
                         val tentor = it.name+"-"+it.email
-                        val course = order_sCourse.selectedItem.toString()
-                        if (course != "Pilih pelajaran"){
-                            val courseName = course.split("-")[1]
-                            if (it.level?.contains(level)!! && it.course?.contains(courseName)!!){
+                        if (sCourse.isNotEmpty()){
+                            var isContains = false
+                            mChooseCourseList.forEach { course ->
+                                isContains = it.course?.contains(course.id.toString())!!
+                            }
+
+                            if (isContains){
                                 sTentorList.add(tentor)
                             }
                         }
@@ -255,11 +295,10 @@ class OrderActivity : AppCompatActivity() {
     }
 
     fun orderTentor(){
-        val course = order_sCourse.selectedItem.toString()
         val tentor = order_sTentor.selectedItem.toString()
         val time = order_etTime.text.toString()
 
-        if (level.isEmpty() || course == "Pilih pelajaran" || tentor == "Pilih tentor" || time.isEmpty()
+        if (level.isEmpty() || sCourse.isBlank() || tentor == "Pilih tentor" || time.isEmpty()
             || mChoosedDayList.isEmpty()){
             Toast.makeText(this, "Lengkapi form pemesanan dengan benar", Toast.LENGTH_SHORT).show()
         }else{
@@ -282,7 +321,7 @@ class OrderActivity : AppCompatActivity() {
                         count++
                     }
                     val order = Order((total+1).toInt(), keyOrder, mUserFirebase.uid, tentorUid, level
-                        , course.split("-")[1],day,time,"proses","","")
+                        , sCourse ,day ,time,"proses","","")
 
                     setOrderInStudent()
                     setOrderInTentor()

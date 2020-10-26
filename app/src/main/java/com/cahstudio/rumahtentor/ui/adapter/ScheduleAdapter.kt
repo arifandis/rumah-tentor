@@ -12,6 +12,9 @@ import kotlinx.android.synthetic.main.item_schedule.view.*
 
 class ScheduleAdapter(val context: Context, val scheduleList: List<Schedule>):
     RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
+
+    var time: String? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleAdapter.ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_schedule, parent, false))
     }
@@ -21,7 +24,11 @@ class ScheduleAdapter(val context: Context, val scheduleList: List<Schedule>):
     override fun onBindViewHolder(holder: ScheduleAdapter.ViewHolder, position: Int) {
         val schedule = scheduleList[position]
 
-        holder.tvDate.text = schedule.date
+        if (time != null){
+            holder.tvDate.text = "${schedule.date} $time WIB"
+        }else{
+            holder.tvDate.text = schedule.date
+        }
 
         if (schedule.status != "ongoing"){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

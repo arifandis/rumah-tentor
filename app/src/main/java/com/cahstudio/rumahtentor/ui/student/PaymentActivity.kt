@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import com.cahstudio.rumahtentor.R
 import com.cahstudio.rumahtentor.model.Course
 import com.cahstudio.rumahtentor.model.Order
+import com.cahstudio.rumahtentor.model.Tentor
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -46,7 +47,10 @@ class PaymentActivity : AppCompatActivity(), View.OnClickListener{
     private var mCurrentOrder = ""
     private var isTransfer = false
     private var mCourse = Course()
+    private var mCourseList = mutableListOf<Course>()
     private var mOrder = Order()
+    private var mTentor = Tentor()
+    private var total = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,32 +116,53 @@ class PaymentActivity : AppCompatActivity(), View.OnClickListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val order = snapshot.getValue(Order::class.java) ?: return
                 mOrder = order
-                getCourse(order)
+                getTentor(order)
             }
 
         })
     }
 
-    fun getTentor(){
-
-    }
-
-    fun getCourse(order: Order){
-        mRef.child("course").orderByChild("id").equalTo(order.course).addListenerForSingleValueEvent(object : ValueEventListener{
+    fun getTentor(order: Order){
+        mRef.child("tentor").orderByChild("uid").equalTo(order.tentor_uid).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
+                var tentor = Tentor()
+                for (ds in snapshot.children){
+                    tentor = ds.getValue(Tentor::class.java) ?: return
+                }
+                val arrayCourseId = order.course?.split(",")
+                arrayCourseId?.forEach {
+                    getCourse(it,tentor)
+                }
+
+            }
+
+        })
+    }
+
+    fun getCourse(crouseId: String, tentor: Tentor){
+        mRef.child("course").orderByChild("id").equalTo(crouseId).addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                mCourseList.clear()
                 var course = Course()
                 for (ds in snapshot.children){
                     course = ds.getValue(Course::class.java) ?: return
                 }
-                mCourse = course
+                mCourseList.add(course)
+                val subtotal = course.price * 14
+                total += subtotal
 
                 val formatRupiah: NumberFormat = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
-                payment_tvTranfer.text = "Transfer ke nomor rekening 666 dengan total pembayaran " +
-                        "${formatRupiah.format(course.price)}"
+                payment_tvTranfer.text = "Transfer ke nomor rekening BANK ${tentor.bank?.toUpperCase()} " +
+                        "${tentor.bank_no_rek} a/n ${tentor.bank_account_name?.toUpperCase()} dengan total pembayaran " +
+                        "${formatRupiah.format(total)}"
             }
 
         })
@@ -171,6 +196,7 @@ class PaymentActivity : AppCompatActivity(), View.OnClickListener{
                         payment_progressbar.visibility = View.GONE
                         payment_btnConfirm.text = "Konfirmasi"
                         Toast.makeText(applicationContext, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+                        finish()
                     }
                 }
             }.addOnFailureListener {
@@ -204,10 +230,10 @@ class PaymentActivity : AppCompatActivity(), View.OnClickListener{
             override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                 mUri = Uri.fromFile(imageFiles[0].file)
                 try {
-                    val bitmap = MediaStore.Images.Media.getBitmap(
-                        contentResolver,
-                        Uri.fromFile(imageFiles[0].file))
-                    payment_ivProof.setImageBitmap(bitmap)
+//                    val bitmap = MediaStore.Images.Media.getBitmap(
+//                        contentResolver,
+//                        Uri.fromFile(imageFiles[0].file))
+                    payment_tvProof.text = imageFiles[0].file.name
                 } catch (e: Exception) {
                     Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
                 }

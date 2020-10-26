@@ -1,5 +1,6 @@
 package com.cahstudio.rumahtentor.ui.tentor
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -8,8 +9,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.cahstudio.rumahtentor.R
+import com.cahstudio.rumahtentor.model.Order
 import com.cahstudio.rumahtentor.model.Tentor
 import com.cahstudio.rumahtentor.ui.student.LoginActivity
+import com.cahstudio.rumahtentor.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -21,6 +24,8 @@ class MainTentorActivity : AppCompatActivity(), View.OnClickListener {
     private var mFirebaseUser: FirebaseUser? = null
     private lateinit var mRef: DatabaseReference
     private lateinit var mTentor: Tentor
+    private lateinit var mOrder: Order
+    private var loadingDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +38,13 @@ class MainTentorActivity : AppCompatActivity(), View.OnClickListener {
         mPref = getSharedPreferences("rumah_tentor", Context.MODE_PRIVATE).edit()
         mFirebaseUser = FirebaseAuth.getInstance().currentUser
         mRef = FirebaseDatabase.getInstance().reference
+        loadingDialog = Utils.setupProgressDialog(this)
 
         main_ivLogout.setOnClickListener(this)
         main_cvOrderList.setOnClickListener(this)
+        main_cvSeeSchedule.setOnClickListener(this)
+        main_cvAnswer.setOnClickListener(this)
+        main_cvChatAdmin.setOnClickListener(this)
 
         getTentorDetail()
     }
@@ -61,7 +70,10 @@ class MainTentorActivity : AppCompatActivity(), View.OnClickListener {
                         Toast.makeText(this, "Menunggu jadwal dari Admin."
                             , Toast.LENGTH_SHORT).show()
                     }else if (mTentor!!.status == "teaching"){
-                        startActivity(Intent(this, SeeScheduleTentorActivity::class.java))
+                        val intent = Intent(this, SeeScheduleTentorActivity::class.java)
+                        intent.putExtra("order_id", mTentor.current_order)
+                        intent.putExtra("time", mOrder.time)
+                        startActivity(intent)
                     }
                 }else{
                     Toast.makeText(this, "Anda belum menerima pesanan."
@@ -79,13 +91,16 @@ class MainTentorActivity : AppCompatActivity(), View.OnClickListener {
                     Toast.makeText(this, "Menunggu jadwal dari Admin."
                         , Toast.LENGTH_SHORT).show()
                 }else if (mTentor!!.status == "teaching"){
-                    startActivity(Intent(this, AnswerQuestionActivity::class.java))
+                    val intent = Intent(this, AnswerQuestionActivity::class.java)
+                    intent.putExtra("current_order", mTentor.current_order)
+                    startActivity(intent)
                 }
             }
         }
     }
 
     fun getTentorDetail(){
+        loadingDialog?.show()
         mFirebaseUser?.uid?.let {
             mRef.child("tentor").child(it).addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -94,9 +109,27 @@ class MainTentorActivity : AppCompatActivity(), View.OnClickListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     mTentor = snapshot.getValue(Tentor::class.java) ?: return
+                    if (mTentor.current_order != null && mTentor.current_order!!.isNotEmpty()){
+                        getCurrentOrder(mTentor.current_order!!)
+                    }
                 }
 
             })
         }
+    }
+
+    fun getCurrentOrder(orderId: String){
+        mRef.child("order").child(orderId).addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(error: DatabaseError) {
+                loadingDialog?.dismiss()
+                Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                loadingDialog?.dismiss()
+                mOrder = snapshot.getValue(Order::class.java) ?: return
+            }
+
+        })
     }
 }

@@ -30,6 +30,7 @@ class OrderDetailAdminActivity : AppCompatActivity(), View.OnClickListener {
     private var mOrder: Order? = null
 
     private var orderId = ""
+    private var sCourse: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,13 +71,14 @@ class OrderDetailAdminActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
+                sCourse = null
                 for (ds in snapshot.children){
                     if (ds.key == orderId){
                         mOrder = ds.getValue(Order::class.java) ?: return
                     }
                 }
 
-                if (mOrder?.status == "waiting schedule"){
+                if (mOrder?.status == "ongoing"){
                     detail_tvStatus.visibility = View.GONE
                     detail_tvStatusLabel.visibility = View.GONE
                 }else{
@@ -90,7 +92,10 @@ class OrderDetailAdminActivity : AppCompatActivity(), View.OnClickListener {
                 detail_tvTime.text = mOrder?.time+" WIB"
 
                 getStudentByKey(mOrder?.student_uid)
-                getCourseById(mOrder?.course)
+                val arrayCourseId = mOrder?.course?.split(",")
+                arrayCourseId?.forEach {
+                    getCourseById(it)
+                }
             }
 
         })
@@ -108,10 +113,15 @@ class OrderDetailAdminActivity : AppCompatActivity(), View.OnClickListener {
                 for (ds in snapshot.children){
                     if (ds.child("id").getValue(String::class.java) == id){
                         course = ds.getValue(Course::class.java) ?: return
+                        if (sCourse == null){
+                            sCourse = course.name
+                        }else{
+                            sCourse = "$sCourse,${course.name}"
+                        }
                     }
                 }
 
-                detail_tvCourse.text = course?.name
+                detail_tvCourse.text = sCourse
 
             }
 

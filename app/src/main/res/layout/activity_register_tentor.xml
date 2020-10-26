@@ -92,6 +92,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nama Bank"
+                    android:textSize="15sp"
                     android:inputType="textCapWords"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,6 +141,28 @@
                     android:textColor="@color/black"
                     android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvNameKTM"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/btnUploadKtm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="upload bukti ktm"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_button_maroon"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/register_tilPassword"

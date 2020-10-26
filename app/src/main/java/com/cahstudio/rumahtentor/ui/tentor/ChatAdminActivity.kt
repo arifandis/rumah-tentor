@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blanjaque.service.FCMClientHelper
 import com.cahstudio.rumahtentor.R
 import com.cahstudio.rumahtentor.model.Message
+import com.cahstudio.rumahtentor.model.Tentor
 import com.cahstudio.rumahtentor.model.request.Request
 import com.cahstudio.rumahtentor.ui.adapter.MessageAdapter
 import com.cahstudio.rumahtentor.ui.adapter.ScheduleAdapter
@@ -34,6 +35,7 @@ class ChatAdminActivity : AppCompatActivity() {
 
     private val compositeDisposable = CompositeDisposable()
     private var mUser: FirebaseUser? = null
+    private var mTentor: Tentor? = null
     private var mMessageList = mutableListOf<Message>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +44,7 @@ class ChatAdminActivity : AppCompatActivity() {
 
         configureToolbar()
         initialize()
+        profile()
         getMessage()
     }
 
@@ -75,10 +78,25 @@ class ChatAdminActivity : AppCompatActivity() {
         }
     }
 
+    fun profile(){
+        mUser?.uid?.let {
+            mRef.child("tentor").child(it).addValueEventListener(object : ValueEventListener{
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    mTentor = snapshot.getValue(Tentor::class.java)
+                }
+
+            })
+        }
+    }
+
     fun getMessage(){
         mUser?.uid?.let {
                 mRef.child("tentor").child(it).child("message")
-                    .child("FZSX3H44G7UxEl0EA8LFWP10rlg2").addValueEventListener(object : ValueEventListener {
+                    .child("eKAwdUASOkfuJsxqnUJyH3patcX2").addValueEventListener(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {
 
                         }
@@ -86,10 +104,13 @@ class ChatAdminActivity : AppCompatActivity() {
                         override fun onDataChange(p0: DataSnapshot) {
                             mMessageList.clear()
                             for (value in p0.children){
-                                var message = value.getValue(Message::class.java) ?: return
+                                if (value.child("id").getValue(Int::class.java) != null){
+                                    var message = value.getValue(Message::class.java)
+                                        ?: return
 
-                                if (message.id != null){
-                                    mMessageList.add(message)
+                                    if (message.id != null){
+                                        mMessageList.add(message)
+                                    }
                                 }
                             }
                             mAdapter.notifyDataSetChanged()
@@ -102,17 +123,17 @@ class ChatAdminActivity : AppCompatActivity() {
 
     fun sendMessage(message: String){
         val tokenRef = FirebaseDatabase.getInstance().reference
-        tokenRef.child("token").orderByKey().equalTo("FZSX3H44G7UxEl0EA8LFWP10rlg2")
+        tokenRef.child("token").orderByKey().equalTo("eKAwdUASOkfuJsxqnUJyH3patcX2")
             .addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
                     Toast.makeText(applicationContext, p0.message, Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    var data = Message((mMessageList.size+1).toLong(),mUser?.displayName,mUser?.uid,"Admin"
-                        ,"FZSX3H44G7UxEl0EA8LFWP10rlg2","",message)
+                    var data = Message((mMessageList.size+1).toLong(),mTentor?.name,mUser?.uid,"Admin"
+                        ,"eKAwdUASOkfuJsxqnUJyH3patcX2","",message)
 
-                    val token = p0.child("FZSX3H44G7UxEl0EA8LFWP10rlg2").value.toString()
+                    val token = p0.child("eKAwdUASOkfuJsxqnUJyH3patcX2").value.toString()
                     val request = Request(token, data)
                     if (token != null && token.isNotEmpty()){
                         pushNotif(request)
@@ -149,7 +170,7 @@ class ChatAdminActivity : AppCompatActivity() {
     fun saveMessage(request: Request){
         mUser?.uid?.let {
             mRef.child("tentor").child(it).child("message").child(
-                "FZSX3H44G7UxEl0EA8LFWP10rlg2").addListenerForSingleValueEvent(object : ValueEventListener{
+                "eKAwdUASOkfuJsxqnUJyH3patcX2").addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
                     Toast.makeText(applicationContext, p0.message, Toast.LENGTH_SHORT).show()
                 }
@@ -158,19 +179,19 @@ class ChatAdminActivity : AppCompatActivity() {
                     chatadmin_msg.setText("")
 
                     //to me
-                    mRef.child("tentor").child(it).child("message").child("FZSX3H44G7UxEl0EA8LFWP10rlg2")
+                    mRef.child("tentor").child(it).child("message").child("eKAwdUASOkfuJsxqnUJyH3patcX2")
                         .child("name").setValue("Admin")
-                    mRef.child("tentor").child(it).child("message").child("FZSX3H44G7UxEl0EA8LFWP10rlg2")
-                        .child("id").setValue("FZSX3H44G7UxEl0EA8LFWP10rlg2")
-                    mRef.child("tentor").child(it).child("message").child("FZSX3H44G7UxEl0EA8LFWP10rlg2")
+                    mRef.child("tentor").child(it).child("message").child("eKAwdUASOkfuJsxqnUJyH3patcX2")
+                        .child("uid").setValue("eKAwdUASOkfuJsxqnUJyH3patcX2")
+                    mRef.child("tentor").child(it).child("message").child("eKAwdUASOkfuJsxqnUJyH3patcX2")
                         .child(request.data.id.toString()).setValue(request.data)
 
                     //to admin
-                    mRef.child("admin").child("FZSX3H44G7UxEl0EA8LFWP10rlg2").child("message").child(it)
-                        .child("name").setValue(mUser?.displayName)
-                    mRef.child("admin").child("FZSX3H44G7UxEl0EA8LFWP10rlg2").child("message").child(it)
-                        .child("id").setValue(it)
-                    mRef.child("admin").child("FZSX3H44G7UxEl0EA8LFWP10rlg2").child("message").child(it)
+                    mRef.child("admin").child("eKAwdUASOkfuJsxqnUJyH3patcX2").child("message").child(it)
+                        .child("name").setValue(mTentor?.name)
+                    mRef.child("admin").child("eKAwdUASOkfuJsxqnUJyH3patcX2").child("message").child(it)
+                        .child("uid").setValue(it)
+                    mRef.child("admin").child("eKAwdUASOkfuJsxqnUJyH3patcX2").child("message").child(it)
                         .child(request.data.id.toString()).setValue(request.data)
                 }
 

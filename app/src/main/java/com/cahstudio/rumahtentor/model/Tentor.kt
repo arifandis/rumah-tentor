@@ -10,7 +10,9 @@ data class Tentor(
     val bank_no_rek: String?,
     val bank_account_name: String?,
     val current_order: String?,
-    val status: String?
+    val status: String?,
+    var ktm: String?
 ){
-    constructor() : this("","","","","","","","","","")
+    constructor() : this("","","","","","",""
+        ,"","","","")
 }

@@ -87,6 +87,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/order_rgLevel" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/order_rvCourse"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/order_tvChooseCourse" />
+
             <Spinner
                 android:id="@+id/order_sCourse"
                 android:layout_width="0dp"
@@ -94,6 +104,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/order_tvChooseCourse" />
@@ -109,7 +120,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/order_sCourse" />
+                app:layout_constraintTop_toBottomOf="@+id/order_rvCourse" />
 
             <Spinner
                 android:id="@+id/order_sTentor"

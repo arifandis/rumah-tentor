@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edt_msg"
+        android:id="@+id/onchat_msg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -38,7 +38,7 @@
         android:id="@+id/onchat_recyclerview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/edt_msg"
+        app:layout_constraintBottom_toTopOf="@+id/onchat_msg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/onchat_toolbar" />
@@ -57,9 +57,9 @@
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         android:tint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/edt_msg"
+        app:layout_constraintBottom_toBottomOf="@+id/onchat_msg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/edt_msg"
+        app:layout_constraintTop_toTopOf="@+id/onchat_msg"
         tools:ignore="RtlHardcoded" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

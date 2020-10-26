@@ -1,8 +1,7 @@
-package com.cahstudio.rumahtentor.ui.tentor.adapter
+package com.cahstudio.rumahtentor.ui.admin.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,40 +11,42 @@ import com.cahstudio.rumahtentor.R
 import com.cahstudio.rumahtentor.model.Course
 import com.cahstudio.rumahtentor.model.Order
 import com.cahstudio.rumahtentor.model.Student
+import com.cahstudio.rumahtentor.model.Tentor
 import com.cahstudio.rumahtentor.ui.admin.OrderDetailAdminActivity
+import com.cahstudio.rumahtentor.ui.admin.SeeScheduleActivity
 import com.cahstudio.rumahtentor.ui.tentor.OrderDetailActivity
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.item_order.view.*
+import kotlinx.android.synthetic.main.item_order.view.itemorder_tvCourse
+import kotlinx.android.synthetic.main.item_order.view.itemorder_tvCourseLevel
+import kotlinx.android.synthetic.main.item_order.view.itemorder_tvOrder
+import kotlinx.android.synthetic.main.item_order.view.itemorder_tvStatus
+import kotlinx.android.synthetic.main.item_order_v2.view.*
 
-class OrderAdapter(val context: Context, val orderList: List<Order>, val accepct: (Order) -> Unit
-                   , val reject: (Order) -> Unit):
-    RecyclerView.Adapter<OrderAdapter.ViewHolder>() {
+class OrderAdapterV2(val context: Context, val orderList: List<Order>):
+    RecyclerView.Adapter<OrderAdapterV2.ViewHolder>() {
 
     private lateinit var mRef: DatabaseReference
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderAdapterV2.ViewHolder {
         mRef = FirebaseDatabase.getInstance().reference
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_order, parent, false))
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_order_v2, parent, false))
     }
 
     override fun getItemCount(): Int = orderList.size
 
-    override fun onBindViewHolder(holder: OrderAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: OrderAdapterV2.ViewHolder, position: Int) {
         val order = orderList[position]
 
         holder.tvLevel.text = order.level
         holder.tvCourse.text = order.course
 
         order.student_uid?.let { holder.getStudentByUid(it, mRef, context) }
+        order.tentor_uid?.let { holder.getTentorByUid(it, mRef, context) }
         val arrayCourseId = order.course?.split(",")
         holder.sCourse = null
         arrayCourseId?.forEach {
             holder.getCourse(it, mRef, context)
-        }
-
-        if (order.status != "proses"){
-            holder.btnAccept.visibility = View.GONE
-            holder.btnReject.visibility = View.GONE
         }
 
         if (order.status == "proses"){
@@ -62,35 +63,29 @@ class OrderAdapter(val context: Context, val orderList: List<Order>, val accepct
 
         holder.itemView.setOnClickListener {
             var intent = Intent()
-            if (order.status == "waiting schedule"){
-                intent = Intent(context, OrderDetailAdminActivity::class.java)
+            if (order.status == "ongoing"){
+                intent = Intent(context, SeeScheduleActivity::class.java)
             }else{
-                intent = Intent(context, OrderDetailActivity::class.java)
+                Toast.makeText(context, "Jadwal belum dibuat", Toast.LENGTH_SHORT).show()
             }
             intent.putExtra("order_id", order.key)
+            intent.putExtra("time", order.time)
             context.startActivity(intent)
         }
 
-        holder.btnAccept.setOnClickListener {
-            accepct(order)
-        }
-
-        holder.btnReject.setOnClickListener {
-            reject(order)
-        }
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val tvLevel = view.itemorder_tvCourseLevel
         val tvCourse = view.itemorder_tvCourse
         val tvOrder = view.itemorder_tvOrder
+        val tvTentor = view.itemorder_tvTentor
         val tvStatus = view.itemorder_tvStatus
-        val btnAccept = view.itemorder_btnAccept
-        val btnReject = view.itemorder_btnReject
         var sCourse: String? = null
 
         fun getStudentByUid(uid: String, reference: DatabaseReference, context: Context){
-            reference.child("student").orderByChild("uid").equalTo(uid).addListenerForSingleValueEvent(object : ValueEventListener{
+            reference.child("student").orderByChild("uid").equalTo(uid).addListenerForSingleValueEvent(object :
+                ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
                 }
@@ -105,8 +100,26 @@ class OrderAdapter(val context: Context, val orderList: List<Order>, val accepct
             })
         }
 
+        fun getTentorByUid(uid: String, reference: DatabaseReference, context: Context){
+            reference.child("tentor").orderByChild("uid").equalTo(uid).addListenerForSingleValueEvent(object :
+                ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (ds in snapshot.children){
+                        val tentor = ds.getValue(Tentor::class.java) ?: return
+                        tvTentor.text = "Tentor: "+tentor.name
+                    }
+                }
+
+            })
+        }
+
         fun getCourse(courseId: String?, reference: DatabaseReference, context: Context){
-            reference.child("course").orderByChild("id").equalTo(courseId).addListenerForSingleValueEvent(object : ValueEventListener{
+            reference.child("course").orderByChild("id").equalTo(courseId).addListenerForSingleValueEvent(object :
+                ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
                 }

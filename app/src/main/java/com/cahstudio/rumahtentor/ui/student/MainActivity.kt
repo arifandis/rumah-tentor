@@ -9,8 +9,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.cahstudio.rumahtentor.R
+import com.cahstudio.rumahtentor.model.Order
 import com.cahstudio.rumahtentor.utils.Utils
 import com.cahstudio.rumahtentor.model.Student
+import com.cahstudio.rumahtentor.ui.tentor.SeeScheduleTentorActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -22,6 +24,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var mStudent: Student? = null
     private lateinit var mRef: DatabaseReference
     private var loadingDialog: Dialog? = null
+    private var mOrder: Order? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         main_cvOrderTentor.setOnClickListener(this)
         main_cvSeeSchedule.setOnClickListener(this)
         main_cvPayment.setOnClickListener(this)
+        main_cvAsk.setOnClickListener(this)
 
         getStudentDetail()
     }
@@ -61,7 +65,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }else if (mStudent!!.status == "payment"){
                         Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan lakukan pembayan."
                             , Toast.LENGTH_SHORT).show()
-                    }else if (mStudent!!.status == "study"){
+                    }else if (mStudent!!.status == "studying"){
                         Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan lanjutkan belajar Anda."
                             , Toast.LENGTH_SHORT).show()
                     } else if (mStudent!!.status == "waiting schedule"){
@@ -78,15 +82,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan tunggu konfirmasi dari tentor."
                             , Toast.LENGTH_SHORT).show()
                     }else if (mStudent!!.status == "payment"){
-                        Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan lakukan pembayan."
+                        Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan lakukan pembayaran."
                             , Toast.LENGTH_SHORT).show()
-                    }else if (mStudent!!.status == "study"){
-                        startActivity(Intent(this, SeeScheduleActivity::class.java))
+                    }else if (mStudent!!.status == "studying"){
+                        val intent = Intent(this, SeeScheduleTentorActivity::class.java)
+                        intent.putExtra("order_id", mStudent?.current_order)
+                        intent.putExtra("time", mOrder?.time)
+                        startActivity(intent)
                     } else if (mStudent!!.status == "waiting schedule"){
                         Toast.makeText(this, "Tunggu jadwal dari Admin."
                             , Toast.LENGTH_SHORT).show()
-                    } else{
-                        startActivity(Intent(this, SeeScheduleActivity::class.java))
                     }
                 }else{
                     Toast.makeText(this, "Anda belum melakukan pemesanan."
@@ -102,11 +107,32 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         val intent = Intent(this, PaymentActivity::class.java)
                         intent.putExtra("current_order", mStudent!!.current_order)
                         startActivity(intent)
-                    }else if (mStudent!!.status == "study"){
+                    }else if (mStudent!!.status == "studying"){
                         Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan lanjutkan belajar Anda."
                             , Toast.LENGTH_SHORT).show()
                     }else if (mStudent!!.status == "waiting schedule"){
                         Toast.makeText(this, "Anda sudah melakukan pembayaran."
+                            , Toast.LENGTH_SHORT).show()
+                    }
+                }else{
+                    Toast.makeText(this, "Anda belum melakukan pemesanan."
+                        , Toast.LENGTH_SHORT).show()
+                }
+            }
+            R.id.main_cvAsk -> {
+                if (mStudent?.current_order != null && mStudent?.current_order!!.isNotEmpty()){
+                    if (mStudent!!.status == "waiting"){
+                        Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan tunggu konfirmasi dari tentor."
+                            , Toast.LENGTH_SHORT).show()
+                    }else if (mStudent!!.status == "payment"){
+                        Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan lakukan pembayaran."
+                            , Toast.LENGTH_SHORT).show()
+                    }else if (mStudent!!.status == "studying"){
+                        val intent = Intent(this, AskQuestionActivity::class.java)
+                        intent.putExtra("current_order", mStudent!!.current_order)
+                        startActivity(intent)
+                    }else if (mStudent!!.status == "waiting schedule"){
+                        Toast.makeText(this, "Tunggu jadwal dari Admin."
                             , Toast.LENGTH_SHORT).show()
                     }
                 }else{
@@ -134,9 +160,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                        , snapshot.child("status").getValue(String::class.java)
 //                        , snapshot.child("current_order").getValue(String::class.java))
                     mStudent = snapshot.getValue(Student::class.java)
+                    mStudent?.current_order?.let { it1 -> getCurrentOrder(it1) }
                 }
 
             })
         }
+    }
+
+    fun getCurrentOrder(orderId: String){
+        mRef.child("order").child(orderId).addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(error: DatabaseError) {
+                loadingDialog?.dismiss()
+                Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                loadingDialog?.dismiss()
+                mOrder = snapshot.getValue(Order::class.java) ?: return
+            }
+
+        })
     }
 }

@@ -21,7 +21,7 @@ class MessageAdapter(val context: Context, val messageList: List<Message>, val u
     override fun onBindViewHolder(holder: MessageAdapter.ViewHolder, position: Int) {
         val message = messageList[position]
 
-        if (message.from_name == userId){
+        if (message.from_uid == userId){
             holder.llFrom.visibility = View.VISIBLE
             holder.llTo.visibility = View.GONE
             holder.ivToImage.visibility = View.GONE

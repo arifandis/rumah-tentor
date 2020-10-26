@@ -1,5 +1,6 @@
 package com.cahstudio.rumahtentor.ui.student
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -24,6 +25,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mPref: SharedPreferences
     private lateinit var mPrefEditor: SharedPreferences.Editor
     private lateinit var mRef: DatabaseReference
+    private lateinit var loadingDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +66,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 mPrefEditor.putString("mode", "student")
                 mPrefEditor.apply()
                 checkUserLoggedIn()
-                startActivity(intent)
-                finish()
             }else{
                 login_btnLoginUser.text = "Masuk"
                 login_progressbar.visibility = View.GONE
