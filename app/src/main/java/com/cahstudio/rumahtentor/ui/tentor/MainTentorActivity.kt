@@ -111,6 +111,8 @@ class MainTentorActivity : AppCompatActivity(), View.OnClickListener {
                     mTentor = snapshot.getValue(Tentor::class.java) ?: return
                     if (mTentor.current_order != null && mTentor.current_order!!.isNotEmpty()){
                         getCurrentOrder(mTentor.current_order!!)
+                    }else{
+                        loadingDialog?.dismiss()
                     }
                 }
 
