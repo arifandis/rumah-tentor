@@ -6,8 +6,10 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Schedule(
     val id: Long,
-    val date: String?,
-    val status: String?
+    var date: String?,
+    var status: String?,
+    var tentor: Boolean?,
+    var student: Boolean?
 ): Parcelable{
-    constructor() : this(0,"","")
+    constructor() : this(0,"","", null, null)
 }

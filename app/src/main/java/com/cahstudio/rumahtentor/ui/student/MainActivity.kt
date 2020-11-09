@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan lakukan pembayaran."
                             , Toast.LENGTH_SHORT).show()
                     }else if (mStudent!!.status == "studying"){
-                        val intent = Intent(this, SeeScheduleTentorActivity::class.java)
+                        val intent = Intent(this, SeeScheduleActivity::class.java)
                         intent.putExtra("order_id", mStudent?.current_order)
                         intent.putExtra("time", mOrder?.time)
                         startActivity(intent)

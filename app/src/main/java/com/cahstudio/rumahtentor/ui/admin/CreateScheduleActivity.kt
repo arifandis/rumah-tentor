@@ -62,7 +62,7 @@ class CreateScheduleActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
         mOrder = intent.getParcelableExtra("order")
 
         val layoutManager = LinearLayoutManager(this)
-        mAdapter = ScheduleAdapter(this, mScheduleList)
+        mAdapter = ScheduleAdapter(this, mScheduleList,{},"admin",{schedule,status ->},{})
         createschedule_recyclerview.layoutManager = layoutManager
         createschedule_recyclerview.adapter = mAdapter
 
@@ -125,7 +125,7 @@ class CreateScheduleActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLi
         calendar.set(Calendar.YEAR, p1)
         calendar.set(Calendar.MONTH, p2)
         calendar.set(Calendar.DAY_OF_MONTH, p3)
-        val schedule = Schedule(id,sdf.format(calendar.time),"ongoing")
+        val schedule = Schedule(id,sdf.format(calendar.time),"ongoing", null, null)
         mScheduleList.add(schedule)
         mAdapter.notifyDataSetChanged()
         id++

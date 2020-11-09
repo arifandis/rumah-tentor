@@ -1,11 +1,13 @@
 package com.cahstudio.rumahtentor.ui.tentor
 
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cahstudio.rumahtentor.R
 import com.cahstudio.rumahtentor.model.Schedule
@@ -18,8 +20,10 @@ class SeeScheduleTentorActivity : AppCompatActivity() {
     private lateinit var actionBar: ActionBar
     private lateinit var mRef: DatabaseReference
     private lateinit var mAdapter: ScheduleAdapter
+    private lateinit var dialogConfirm: AlertDialog.Builder
 
     private var mOrderId: String? = null
+    private var mSchedule: Schedule? = null
     private var mScheduleList = mutableListOf<Schedule>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +33,7 @@ class SeeScheduleTentorActivity : AppCompatActivity() {
         configureToolbar()
         initiliaze()
         getSchedule()
+        initializeConfirmDialog()
     }
 
     private fun configureToolbar(){
@@ -52,7 +57,8 @@ class SeeScheduleTentorActivity : AppCompatActivity() {
         val time = intent.getStringExtra("time")
 
         val layoutManager = LinearLayoutManager(this)
-        mAdapter = ScheduleAdapter(this, mScheduleList)
+        mAdapter = ScheduleAdapter(this, mScheduleList,{schedule -> showConfirmDialog(schedule) }
+            ,"tentor",{schedule,status -> },{schedule ->  })
         mAdapter.time = time
         schedule_recyclerview.layoutManager = layoutManager
         schedule_recyclerview.adapter = mAdapter
@@ -75,5 +81,54 @@ class SeeScheduleTentorActivity : AppCompatActivity() {
             }
 
         }) }
+    }
+
+    fun initializeConfirmDialog(){
+        dialogConfirm = AlertDialog.Builder(this)
+        dialogConfirm.setTitle("Konfirmasi Kehadiran")
+
+        dialogConfirm.setPositiveButton("Hadir") { dialog, which ->
+            if (mSchedule != null){
+                attended(dialog)
+            }
+        }
+
+        dialogConfirm.setNegativeButton("Re-Schedule") { dialog, which ->
+            if (mSchedule != null){
+                reschedule(dialog)
+            }
+        }
+    }
+
+    fun showConfirmDialog(schedule: Schedule){
+        dialogConfirm.setMessage("Les akan dilaksanakan pada ${schedule.date}")
+        dialogConfirm.show()
+        mSchedule = schedule
+    }
+
+    fun attended(dialog: DialogInterface){
+        mOrderId?.let { mRef.child("order").child(it).child("schedule").child((mSchedule?.id?.minus(
+            1)).toString()).child("tentor").setValue(true).addOnCompleteListener {
+            if (it.isSuccessful){
+                dialog.dismiss()
+                getSchedule()
+            }else{
+                dialog.dismiss()
+                Toast.makeText(this, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+            }
+        } }
+    }
+
+    fun reschedule(dialog: DialogInterface){
+        mOrderId?.let { mRef.child("order").child(it).child("schedule").child((mSchedule?.id?.minus(
+            1)).toString()).child("tentor").setValue(false).addOnCompleteListener {
+            if (it.isSuccessful){
+                dialog.dismiss()
+                getSchedule()
+            }else{
+                dialog.dismiss()
+                Toast.makeText(this, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+            }
+        } }
     }
 }

@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBar">
-        <activity android:name=".ui.admin.ScheduleListActivity"></activity>
+        <activity android:name=".ui.student.ConfirmScheduleStudentActivity"></activity>
+        <activity android:name=".ui.admin.ScheduleListActivity" />
         <activity android:name=".ui.admin.ChatTentorActivity" />
         <activity android:name=".ui.admin.OrderDetailAdminActivity" />
         <activity android:name=".ui.admin.CreateScheduleActivity" />
