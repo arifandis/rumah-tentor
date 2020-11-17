@@ -65,7 +65,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             if (it.isSuccessful){
                 mPrefEditor.putString("mode", "student")
                 mPrefEditor.apply()
-                checkUserLoggedIn()
             }else{
                 login_btnLoginUser.text = "Masuk"
                 login_progressbar.visibility = View.GONE

@@ -63,8 +63,6 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                 mPrefEditor.putString("mode", "student")
                 mPrefEditor.apply()
                 Toast.makeText(this, "Pendaftaran berhasil", Toast.LENGTH_SHORT).show()
-
-                checkUserLoggedIn()
             }else{
                 register_progressbar.visibility = View.GONE
                 register_btnRegis.text = "Daftar"

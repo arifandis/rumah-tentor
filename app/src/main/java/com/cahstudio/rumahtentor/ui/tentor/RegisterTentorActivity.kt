@@ -122,8 +122,8 @@ class RegisterTentorActivity : AppCompatActivity(), View.OnClickListener {
                     mPrefEditor.putString("mode", "tentor")
                     mPrefEditor.apply()
                     Toast.makeText(this, "Pendaftaran berhasil", Toast.LENGTH_SHORT).show()
-
-                    checkUserLoggedIn()
+                    startActivity(Intent(this, ChooseLevelActivity::class.java))
+                    finish()
                 }else{
                     Toast.makeText(applicationContext, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
                 }
@@ -136,8 +136,7 @@ class RegisterTentorActivity : AppCompatActivity(), View.OnClickListener {
     fun checkUserLoggedIn(){
         mAuthStateListener = FirebaseAuth.AuthStateListener {
             if (it.currentUser != null){
-                startActivity(Intent(this, ChooseLevelActivity::class.java))
-                finish()
+
             }
         }
     }

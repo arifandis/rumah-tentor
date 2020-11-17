@@ -8,8 +8,8 @@ data class Schedule(
     val id: Long,
     var date: String?,
     var status: String?,
-    var tentor: Boolean?,
-    var student: Boolean?
+    var tentor: String?,
+    var student: String?
 ): Parcelable{
     constructor() : this(0,"","", null, null)
 }

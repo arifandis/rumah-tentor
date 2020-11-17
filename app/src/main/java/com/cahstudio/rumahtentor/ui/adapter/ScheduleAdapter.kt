@@ -15,8 +15,12 @@ class ScheduleAdapter(val context: Context, val scheduleList: List<Schedule>, va
     RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
 
     var time: String? = null
+    var mScheduleList = mutableListOf<Schedule>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleAdapter.ViewHolder {
+        if (mScheduleList.isEmpty()){
+            mScheduleList.addAll(scheduleList)
+        }
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_schedule, parent, false))
     }
 
@@ -31,31 +35,21 @@ class ScheduleAdapter(val context: Context, val scheduleList: List<Schedule>, va
             holder.tvDate.text = schedule.date
         }
 
-        if (schedule.status != "ongoing"){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                holder.cvItem.setCardBackgroundColor(context.resources.getColor(R.color.gray, null))
-            }else{
-                holder.cvItem.setCardBackgroundColor(context.resources.getColor(R.color.gray))
-            }
-        }else{
-            holder.itemView.setOnClickListener {
-                confirm(schedule)
-            }
-        }
-
-        if (schedule.status == "ongoing"){
-            holder.tvStatus.text = "Menunggu konfirmasi"
-        }else if (schedule.status == "attend"){
-            holder.tvStatus.text = "Hadir"
-        }else if (schedule.status == "reschedule"){
-            holder.tvStatus.text = "Reschedule"
-        }
+        checkStatus(schedule.status, holder, schedule)
 
         if (schedule.tentor != null && schedule.student != null){
-            if (schedule.tentor!! && schedule.student!!){
-                update(schedule,"attend")
-            }else{
-                update(schedule,"reschedule")
+            if (schedule.tentor!! == "attend"){
+                if (schedule.tentor!! == schedule.student!!){
+                    update(schedule,"attend")
+                }else{
+                    update(schedule,"reschedule")
+                }
+            }else if (schedule.student!! == "attend"){
+                if (schedule.student!! == schedule.tentor!!){
+                    update(schedule,"attend")
+                }else{
+                    update(schedule,"reschedule")
+                }
             }
         }
 
@@ -67,20 +61,47 @@ class ScheduleAdapter(val context: Context, val scheduleList: List<Schedule>, va
             }
         }else if (role == "tentor"){
             if (schedule.tentor != null){
-                if (schedule.tentor!!){
+                if (schedule.tentor!! == "attend"){
                     scheduleList[position].status = "attend"
+                    checkStatus(scheduleList[position].status, holder, schedule)
                 }else{
                     scheduleList[position].status = "reschedule"
+                    checkStatus(scheduleList[position].status, holder, schedule)
                 }
             }
         }else if (role == "student"){
             if (schedule.student != null){
-                if (schedule.student!!){
+                if (schedule.student!! == "attend"){
                     scheduleList[position].status = "attend"
+                    checkStatus(scheduleList[position].status, holder, schedule)
                 }else{
                     scheduleList[position].status = "reschedule"
+                    checkStatus(scheduleList[position].status, holder, schedule)
                 }
             }
+        }
+    }
+
+    fun checkStatus(status: String?, holder: ViewHolder, schedule: Schedule){
+        if (status != "ongoing"){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                holder.cvItem.setCardBackgroundColor(context.resources.getColor(R.color.gray, null))
+            }else{
+                holder.cvItem.setCardBackgroundColor(context.resources.getColor(R.color.gray))
+            }
+            holder.itemView.isEnabled = false
+        }else{
+            holder.itemView.setOnClickListener {
+                confirm(schedule)
+            }
+        }
+
+        if (status == "ongoing"){
+            holder.tvStatus.text = "Menunggu konfirmasi"
+        }else if (status == "attend"){
+            holder.tvStatus.text = "Hadir"
+        }else if (status == "reschedule"){
+            holder.tvStatus.text = "Reschedule"
         }
     }
 

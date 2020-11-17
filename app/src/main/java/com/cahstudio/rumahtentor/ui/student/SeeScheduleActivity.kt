@@ -125,7 +125,7 @@ class SeeScheduleActivity : AppCompatActivity() {
 
     fun attended(dialog: DialogInterface){
         mOrderId?.let { mRef.child("order").child(it).child("schedule").child((mSchedule?.id?.minus(
-            1)).toString()).child("student").setValue(true).addOnCompleteListener {
+            1)).toString()).child("student").setValue("attend").addOnCompleteListener {
             if (it.isSuccessful){
                 dialog.dismiss()
                 getSchedule()
@@ -138,7 +138,7 @@ class SeeScheduleActivity : AppCompatActivity() {
 
     fun reschedule(dialog: DialogInterface){
         mOrderId?.let { mRef.child("order").child(it).child("schedule").child((mSchedule?.id?.minus(
-            1)).toString()).child("student").setValue(false).addOnCompleteListener {
+            1)).toString()).child("student").setValue("reschedule").addOnCompleteListener {
             if (it.isSuccessful){
                 dialog.dismiss()
                 getSchedule()
@@ -185,6 +185,7 @@ class SeeScheduleActivity : AppCompatActivity() {
                     schedule_btnRating.visibility = View.GONE
                     Toast.makeText(this, "Berhasil memberi rating", Toast.LENGTH_SHORT).show()
                     ratingDialog.dismiss()
+                    checkRating()
                 }else{
                     Toast.makeText(this, "Gagal memberi rating", Toast.LENGTH_SHORT).show()
                 }

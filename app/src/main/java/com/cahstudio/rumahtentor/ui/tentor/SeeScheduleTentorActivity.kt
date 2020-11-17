@@ -108,7 +108,7 @@ class SeeScheduleTentorActivity : AppCompatActivity() {
 
     fun attended(dialog: DialogInterface){
         mOrderId?.let { mRef.child("order").child(it).child("schedule").child((mSchedule?.id?.minus(
-            1)).toString()).child("tentor").setValue(true).addOnCompleteListener {
+            1)).toString()).child("tentor").setValue("attend").addOnCompleteListener {
             if (it.isSuccessful){
                 dialog.dismiss()
                 getSchedule()
@@ -121,7 +121,7 @@ class SeeScheduleTentorActivity : AppCompatActivity() {
 
     fun reschedule(dialog: DialogInterface){
         mOrderId?.let { mRef.child("order").child(it).child("schedule").child((mSchedule?.id?.minus(
-            1)).toString()).child("tentor").setValue(false).addOnCompleteListener {
+            1)).toString()).child("tentor").setValue("reschedule").addOnCompleteListener {
             if (it.isSuccessful){
                 dialog.dismiss()
                 getSchedule()
