@@ -1,6 +1,6 @@
 package com.cahstudio.rumahtentor.model
 
-data class UserMessage(
+data class User(
     val uid: String?,
     val name: String?
 ){

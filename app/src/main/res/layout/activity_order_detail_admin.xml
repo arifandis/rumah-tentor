@@ -17,6 +17,8 @@
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:overScrollMode="never"
+        android:layout_marginBottom="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -161,7 +163,6 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/detail_tvLevelLabel"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_tvTime" />
@@ -173,10 +174,62 @@
                 android:layout_marginEnd="15dp"
                 android:textColor="@color/black"
                 android:textSize="15sp"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/detail_tvStatusLabel"
                 app:layout_constraintTop_toTopOf="@+id/detail_tvStatusLabel" />
+
+            <TextView
+                android:id="@+id/detail_tvTypePaymentLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:text="Tipe Pembayaran: "
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/detail_tvLevelLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_tvStatus" />
+
+            <TextView
+                android:id="@+id/detail_tvTypePayment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/detail_tvTypePaymentLabel"
+                app:layout_constraintTop_toTopOf="@+id/detail_tvTypePaymentLabel" />
+
+            <TextView
+                android:id="@+id/detail_tvProofLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Bukti Pembayaran"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_tvTypePaymentLabel" />
+
+            <ImageView
+                android:id="@+id/detail_ivProofPayment"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_tvProofLabel" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -189,6 +242,22 @@
         android:layout_marginBottom="15dp"
         android:background="@color/red_maroon"
         android:text="Buat Jadwal"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/detail_btnConfirmPayment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/red_maroon"
+        android:text="Konfirmasi Pembayaran"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -95,7 +95,7 @@ class RegisterTentorActivity : AppCompatActivity(), View.OnClickListener {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
             if (it.isSuccessful){
                 val authUser = it.result?.user
-                val tentor = Tentor("",email,"",name,authUser?.uid,bank,noRek,accountName,"","not teaching","")
+                val tentor = Tentor("not confirmed","",email,"",name,authUser?.uid,bank,noRek,accountName,"","not teaching","",0)
                 authUser?.let { it1 -> uploadKtm(it1, tentor) }
             }else{
                 register_progressbar.visibility = View.GONE
@@ -122,7 +122,9 @@ class RegisterTentorActivity : AppCompatActivity(), View.OnClickListener {
                     mPrefEditor.putString("mode", "tentor")
                     mPrefEditor.apply()
                     Toast.makeText(this, "Pendaftaran berhasil", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, ChooseLevelActivity::class.java))
+                    val intent = Intent(this, WaitingConfirmedActivity::class.java)
+                    intent.putExtra("uid", auth.uid)
+                    startActivity(intent)
                     finish()
                 }else{
                     Toast.makeText(applicationContext, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()

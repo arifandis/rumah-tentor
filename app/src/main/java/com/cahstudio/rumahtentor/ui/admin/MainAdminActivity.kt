@@ -32,6 +32,7 @@ class MainAdminActivity : AppCompatActivity(), View.OnClickListener {
         main_cvSeeSchedule.setOnClickListener(this)
         main_cvChatTentor.setOnClickListener(this)
         main_ivLogout.setOnClickListener(this)
+        main_cvTentor.setOnClickListener(this)
     }
 
     override fun onClick(p0: View?) {
@@ -51,6 +52,9 @@ class MainAdminActivity : AppCompatActivity(), View.OnClickListener {
                 FirebaseAuth.getInstance().signOut()
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
+            }
+            R.id.main_cvTentor -> {
+                startActivity(Intent(this, TentorListActivity::class.java))
             }
         }
     }

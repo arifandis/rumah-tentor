@@ -16,8 +16,9 @@ data class Order(
     val status: String?,
     val payment_type: String?,
     val payment: String?,
-    val schedule: List<Schedule>? = null
+    val schedule: List<Schedule>? = null,
+    var rating: Long
 ): Parcelable{
     constructor() : this(0,"","","","","",""
-        ,"","","","",null)
+        ,"","","","",null,0)
 }

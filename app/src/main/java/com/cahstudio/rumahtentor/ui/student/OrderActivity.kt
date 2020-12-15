@@ -17,6 +17,7 @@ import com.cahstudio.rumahtentor.model.Day
 import com.cahstudio.rumahtentor.model.Order
 import com.cahstudio.rumahtentor.model.Tentor
 import com.cahstudio.rumahtentor.ui.student.adapter.DayAdapter
+import com.cahstudio.rumahtentor.ui.student.adapter.TentorWithRatingAdapter
 import com.cahstudio.rumahtentor.ui.tentor.adapter.ChooseCourseAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -26,6 +27,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.system.measureNanoTime
 
 class OrderActivity : AppCompatActivity() {
     private lateinit var actionBar: ActionBar
@@ -35,6 +37,7 @@ class OrderActivity : AppCompatActivity() {
     private lateinit var sCourseAdapter: ArrayAdapter<String>
     private lateinit var sTentorAdapter: ArrayAdapter<String>
     private lateinit var mCourseAdapter: ChooseCourseAdapter
+    private lateinit var mTentorAdapter: TentorWithRatingAdapter
 
     private var mDayList = mutableListOf<Day>()
     private var mChoosedDayList = mutableListOf<Day>()
@@ -139,6 +142,7 @@ class OrderActivity : AppCompatActivity() {
         mDayAdapter = DayAdapter(this, mDayList,{day -> addDay(day) },{day -> removeDay(day) })
         order_rvDay.layoutManager = layoutManager
         order_rvDay.adapter = mDayAdapter
+        order_rvDay.isNestedScrollingEnabled = false
 
         sCourseList.add("Pilih pelajaran")
         sCourseAdapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, sCourseList)
@@ -147,6 +151,11 @@ class OrderActivity : AppCompatActivity() {
         sTentorList.add("Pilih tentor")
         sTentorAdapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, sTentorList)
         order_sTentor.adapter = sTentorAdapter
+
+        val tentorLayoutManager = LinearLayoutManager(this)
+        mTentorAdapter = TentorWithRatingAdapter(this, mTentorList, {tentor -> selectTentor(tentor) })
+        order_recyclerview.layoutManager = tentorLayoutManager
+        order_recyclerview.adapter = mTentorAdapter
     }
 
     fun showTimePicker(){
@@ -241,7 +250,7 @@ class OrderActivity : AppCompatActivity() {
         sTentorList.clear()
         sTentorList.add("Pilih tentor")
         sTentorAdapter.notifyDataSetChanged()
-        mRef.child("tentor").addListenerForSingleValueEvent(object : ValueEventListener{
+        mRef.child("tentor").orderByChild("rating").addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
             }
@@ -250,28 +259,40 @@ class OrderActivity : AppCompatActivity() {
                 for (ds in snapshot.children){
                     val tentor = ds.getValue(Tentor::class.java) ?: return
 
+                    val totalOrder = ds.child("order").childrenCount
+
+                    if (totalOrder != 0.toLong()){
+                        val total = tentor.rating/totalOrder
+                        tentor.rating = total
+                    }
+
                     mTentorList.add(tentor)
                 }
+                mTentorAdapter.notifyDataSetChanged()
 
-                if (mCourseList.isNotEmpty()){
-                    mTentorList.forEach {
-                        val tentor = it.name+"-"+it.email
-                        if (sCourse.isNotEmpty()){
-                            var isContains = false
-                            mChooseCourseList.forEach { course ->
-                                isContains = it.course?.contains(course.id.toString())!!
-                            }
-
-                            if (isContains){
-                                sTentorList.add(tentor)
-                            }
-                        }
-                    }
-                    sTentorAdapter.notifyDataSetChanged()
-                }
+//                if (mCourseList.isNotEmpty()){
+//                    mTentorList.forEach {
+//                        val tentor = it.name+"-"+it.email
+//                        if (sCourse.isNotEmpty()){
+//                            var isContains = false
+//                            mChooseCourseList.forEach { course ->
+//                                isContains = it.course?.contains(course.id.toString())!!
+//                            }
+//
+//                            if (isContains){
+//                                sTentorList.add(tentor)
+//                            }
+//                        }
+//                    }
+//                    sTentorAdapter.notifyDataSetChanged()
+//                }
             }
 
         })
+    }
+
+    fun selectTentor(tentor: Tentor){
+        tentorUid = tentor.uid.toString()
     }
 
     fun getTentorUid(){
@@ -298,7 +319,7 @@ class OrderActivity : AppCompatActivity() {
         val tentor = order_sTentor.selectedItem.toString()
         val time = order_etTime.text.toString()
 
-        if (level.isEmpty() || sCourse.isBlank() || tentor == "Pilih tentor" || time.isEmpty()
+        if (level.isEmpty() || sCourse.isBlank() || tentorUid.isEmpty() || time.isEmpty()
             || mChoosedDayList.isEmpty()){
             Toast.makeText(this, "Lengkapi form pemesanan dengan benar", Toast.LENGTH_SHORT).show()
         }else{
@@ -321,7 +342,7 @@ class OrderActivity : AppCompatActivity() {
                         count++
                     }
                     val order = Order((total+1).toInt(), keyOrder, mUserFirebase.uid, tentorUid, level
-                        , sCourse ,day ,time,"proses","","")
+                        , sCourse ,day ,time,"proses","","",null,0)
 
                     setOrderInStudent()
                     setOrderInTentor()

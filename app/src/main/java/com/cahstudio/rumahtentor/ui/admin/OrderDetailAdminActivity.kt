@@ -12,6 +12,7 @@ import com.cahstudio.rumahtentor.model.Order
 import com.cahstudio.rumahtentor.model.Student
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_order_detail.*
 import kotlinx.android.synthetic.main.activity_order_detail.detail_tvCourse
 import kotlinx.android.synthetic.main.activity_order_detail.detail_tvDay
@@ -61,6 +62,7 @@ class OrderDetailAdminActivity : AppCompatActivity(), View.OnClickListener {
         orderId = intent.getStringExtra("order_id")
 
         detail_btnCreateSchedule.setOnClickListener(this)
+        detail_btnConfirmPayment.setOnClickListener(this)
     }
 
     fun getDetail(){
@@ -78,15 +80,46 @@ class OrderDetailAdminActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
 
-                if (mOrder?.status == "ongoing"){
-                    detail_tvStatus.visibility = View.GONE
-                    detail_tvStatusLabel.visibility = View.GONE
+                if (mOrder?.status == "waiting schedule"){
+                    detail_btnCreateSchedule.visibility = View.VISIBLE
+                    detail_btnConfirmPayment.visibility = View.GONE
+                    detail_tvProofLabel.visibility = View.GONE
+                    detail_ivProofPayment.visibility = View.GONE
+                    detail_tvTypePayment.visibility = View.GONE
+                    detail_tvTypePaymentLabel.visibility = View.GONE
                 }else{
-                    detail_tvStatus.visibility = View.VISIBLE
-                    detail_tvStatusLabel.visibility = View.VISIBLE
+                    detail_btnCreateSchedule.visibility = View.GONE
+                    detail_btnConfirmPayment.visibility = View.VISIBLE
+                    detail_tvTypePayment.visibility = View.VISIBLE
+                    detail_tvTypePaymentLabel.visibility = View.VISIBLE
+
+                    detail_tvTypePayment.text = mOrder?.payment_type
+
+                    if (mOrder?.payment_type == "transfer"){
+                        detail_tvProofLabel.visibility = View.VISIBLE
+                        detail_ivProofPayment.visibility = View.VISIBLE
+
+                        Picasso.get().load(mOrder?.payment).into(detail_ivProofPayment)
+                    }
                 }
 
-                detail_tvStatus.text = mOrder?.status
+                detail_tvStatus.visibility = View.VISIBLE
+                detail_tvStatusLabel.visibility = View.VISIBLE
+
+                if (mOrder?.status == "proses"){
+                    detail_tvStatus.text = "Sedang proses"
+                }else if (mOrder?.status == "reject"){
+                    detail_tvStatus.text = "Ditolak"
+                }else if (mOrder?.status == "ongoing"){
+                    detail_tvStatus.text = "Sedang berjalan"
+                }else if (mOrder?.status == "waiting schedule"){
+                    detail_tvStatus.text = "Menunggu jadwal"
+                }else if (mOrder?.status == "waiting confirm payment"){
+                    detail_tvStatus.text = "Menunggu konfirmasi pembayaran"
+                }else if (mOrder?.status == "done"){
+                    detail_tvStatus.text = "Selesai"
+                }
+
                 detail_tvLevel.text = mOrder?.level
                 detail_tvDay.text = mOrder?.day
                 detail_tvTime.text = mOrder?.time+" WIB"
@@ -150,12 +183,31 @@ class OrderDetailAdminActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
+    fun confirmPayment(){
+        mRef.child("order").child(orderId).child("status").setValue("waiting schedule")
+            .addOnCompleteListener {
+                if (it.isSuccessful){
+                    mRef.child("tentor").child(mOrder?.tentor_uid.toString()).child("status")
+                        .setValue("waiting schedule")
+                    mRef.child("student").child(mOrder?.student_uid.toString()).child("status")
+                        .setValue("waiting schedule")
+
+                    Toast.makeText(applicationContext, "Konfirmasi pembayaran berhasil", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(applicationContext, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
     override fun onClick(p0: View?) {
         when(p0?.id){
             R.id.detail_btnCreateSchedule -> {
                 val intent = Intent(this, CreateScheduleActivity::class.java)
                 intent.putExtra("order", mOrder)
                 startActivity(intent)
+            }
+            R.id.detail_btnConfirmPayment -> {
+                confirmPayment()
             }
         }
     }

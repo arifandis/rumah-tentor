@@ -52,6 +52,31 @@
                 app:layout_constraintTop_toTopOf="@+id/detail_tvNameLabel" />
 
             <TextView
+                android:id="@+id/detail_tvTentorLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:text="Nama Tentor: "
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/detail_tvNameLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_tvNameLabel" />
+
+            <TextView
+                android:id="@+id/detail_tvTentor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/detail_tvTentorLabel"
+                app:layout_constraintTop_toTopOf="@+id/detail_tvTentorLabel" />
+
+            <TextView
                 android:id="@+id/detail_tvLevelLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -63,7 +88,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/detail_tvNameLabel"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detail_tvName" />
+                app:layout_constraintTop_toBottomOf="@+id/detail_tvTentorLabel" />
 
             <TextView
                 android:id="@+id/detail_tvLevel"
@@ -161,7 +186,6 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/detail_tvLevelLabel"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_tvTime" />
@@ -173,7 +197,6 @@
                 android:layout_marginEnd="15dp"
                 android:textColor="@color/black"
                 android:textSize="15sp"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/detail_tvStatusLabel"
                 app:layout_constraintTop_toTopOf="@+id/detail_tvStatusLabel" />

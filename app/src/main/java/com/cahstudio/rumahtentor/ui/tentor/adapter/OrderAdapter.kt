@@ -18,7 +18,7 @@ import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.item_order.view.*
 
 class OrderAdapter(val context: Context, val orderList: List<Order>, val accepct: (Order) -> Unit
-                   , val reject: (Order) -> Unit):
+                   , val reject: (Order) -> Unit, val mode: String):
     RecyclerView.Adapter<OrderAdapter.ViewHolder>() {
 
     private lateinit var mRef: DatabaseReference
@@ -43,10 +43,16 @@ class OrderAdapter(val context: Context, val orderList: List<Order>, val accepct
             holder.getCourse(it, mRef, context)
         }
 
-        if (order.status != "proses"){
+        if (mode == "tentor"){
             holder.btnAccept.visibility = View.GONE
             holder.btnReject.visibility = View.GONE
+        }else{
+            if (order.status != "proses"){
+                holder.btnAccept.visibility = View.GONE
+                holder.btnReject.visibility = View.GONE
+            }
         }
+
 
         if (order.status == "proses"){
             holder.tvStatus.text = "Status: Sedang proses"
@@ -54,7 +60,9 @@ class OrderAdapter(val context: Context, val orderList: List<Order>, val accepct
             holder.tvStatus.text = "Status: Ditolak"
         }else if (order.status == "ongoing"){
             holder.tvStatus.text = "Status: Sedang berjalan"
-        }else if (order.status == "waiting schedule"){
+        }else if (order.status == "waiting confirm payment"){
+            holder.tvStatus.text = "Status: Menunggu konfirmasi pembayaran"
+        } else if (order.status == "waiting schedule"){
             holder.tvStatus.text = "Status: Menunggu jadwal"
         }else if (order.status == "done"){
             holder.tvStatus.text = "Status: Selesai"
@@ -62,9 +70,9 @@ class OrderAdapter(val context: Context, val orderList: List<Order>, val accepct
 
         holder.itemView.setOnClickListener {
             var intent = Intent()
-            if (order.status == "waiting schedule"){
+            if (order.status == "waiting schedule" || order.status == "waiting confirm payment"){
                 intent = Intent(context, OrderDetailAdminActivity::class.java)
-            }else{
+            } else{
                 intent = Intent(context, OrderDetailActivity::class.java)
             }
             intent.putExtra("order_id", order.key)

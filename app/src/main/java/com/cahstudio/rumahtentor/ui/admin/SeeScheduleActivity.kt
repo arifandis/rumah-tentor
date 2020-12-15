@@ -57,8 +57,7 @@ class SeeScheduleActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
         val time = intent.getStringExtra("time")
 
         val layoutManager = LinearLayoutManager(this)
-        mAdapter = ScheduleAdapter(this, mScheduleList,{}, "admin",{schedule,status ->
-            updateStatus(schedule, status) },{schedule -> showDatePicker(schedule) })
+        mAdapter = ScheduleAdapter(this, mScheduleList,{}, "admin",{schedule -> showDatePicker(schedule) })
         mAdapter.time = time
         schedule_recyclerview.layoutManager = layoutManager
         schedule_recyclerview.adapter = mAdapter
@@ -82,11 +81,6 @@ class SeeScheduleActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListe
             }
 
         }) }
-    }
-
-    fun updateStatus(schedule: Schedule, status: String){
-        mOrderId?.let { mRef.child("order").child(it).child("schedule").child((schedule.id-1).toString())
-            .child("status").setValue(status)}
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {

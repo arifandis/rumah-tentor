@@ -58,7 +58,7 @@ class SeeScheduleTentorActivity : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         mAdapter = ScheduleAdapter(this, mScheduleList,{schedule -> showConfirmDialog(schedule) }
-            ,"tentor",{schedule,status -> },{schedule ->  })
+            ,"tentor",{schedule ->  })
         mAdapter.time = time
         schedule_recyclerview.layoutManager = layoutManager
         schedule_recyclerview.adapter = mAdapter

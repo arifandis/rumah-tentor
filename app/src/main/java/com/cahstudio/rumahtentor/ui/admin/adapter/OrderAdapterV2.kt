@@ -57,6 +57,8 @@ class OrderAdapterV2(val context: Context, val orderList: List<Order>):
             holder.tvStatus.text = "Status: Sedang berjalan"
         }else if (order.status == "waiting schedule"){
             holder.tvStatus.text = "Status: Menunggu jadwal"
+        }else if (order.status == "waiting confirm payment"){
+            holder.tvStatus.text = "Status: Menunggu konfirmasi pembayaran"
         }else if (order.status == "done"){
             holder.tvStatus.text = "Status: Selesai"
         }

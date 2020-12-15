@@ -11,7 +11,7 @@ import com.cahstudio.rumahtentor.model.Schedule
 import kotlinx.android.synthetic.main.item_schedule.view.*
 
 class ScheduleAdapter(val context: Context, val scheduleList: List<Schedule>, val confirm: (Schedule) -> Unit
-                      , val role: String, val update: (Schedule,String) -> Unit, val reschedule: (Schedule) -> Unit):
+                      , val role: String, val reschedule: (Schedule) -> Unit):
     RecyclerView.Adapter<ScheduleAdapter.ViewHolder>() {
 
     var time: String? = null
@@ -37,38 +37,23 @@ class ScheduleAdapter(val context: Context, val scheduleList: List<Schedule>, va
 
         checkStatus(schedule.status, holder, schedule)
 
-        if (schedule.tentor != null && schedule.student != null){
-            if (schedule.tentor!! == "attend"){
-                if (schedule.tentor!! == schedule.student!!){
-                    update(schedule,"attend")
-                }else{
-                    update(schedule,"reschedule")
-                }
-            }else if (schedule.student!! == "attend"){
-                if (schedule.student!! == schedule.tentor!!){
-                    update(schedule,"attend")
-                }else{
-                    update(schedule,"reschedule")
-                }
-            }
-        }
-
         if (role == "admin"){
-            holder.tvStatus.visibility = View.GONE
-            holder.btnReschedule.visibility = View.VISIBLE
-            holder.btnReschedule.setOnClickListener {
-                reschedule(schedule)
+            if (schedule.status == "reschedule"){
+                holder.btnReschedule.visibility = View.VISIBLE
+                holder.btnReschedule.setOnClickListener {
+                    reschedule(schedule)
+                }
             }
         }else if (role == "tentor"){
-            if (schedule.tentor != null){
-                if (schedule.tentor!! == "attend"){
-                    scheduleList[position].status = "attend"
-                    checkStatus(scheduleList[position].status, holder, schedule)
-                }else{
-                    scheduleList[position].status = "reschedule"
-                    checkStatus(scheduleList[position].status, holder, schedule)
-                }
-            }
+//            if (schedule.tentor != null){
+//                if (schedule.tentor!! == "attend"){
+//                    scheduleList[position].status = "attend"
+//                    checkStatus(scheduleList[position].status, holder, schedule)
+//                }else{
+//                    scheduleList[position].status = "reschedule"
+//                    checkStatus(scheduleList[position].status, holder, schedule)
+//                }
+//            }
         }else if (role == "student"){
             if (schedule.student != null){
                 if (schedule.student!! == "attend"){
@@ -83,25 +68,30 @@ class ScheduleAdapter(val context: Context, val scheduleList: List<Schedule>, va
     }
 
     fun checkStatus(status: String?, holder: ViewHolder, schedule: Schedule){
-        if (status != "ongoing"){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                holder.cvItem.setCardBackgroundColor(context.resources.getColor(R.color.gray, null))
-            }else{
-                holder.cvItem.setCardBackgroundColor(context.resources.getColor(R.color.gray))
-            }
-            holder.itemView.isEnabled = false
-        }else{
-            holder.itemView.setOnClickListener {
-                confirm(schedule)
-            }
-        }
 
-        if (status == "ongoing"){
-            holder.tvStatus.text = "Menunggu konfirmasi"
-        }else if (status == "attend"){
-            holder.tvStatus.text = "Hadir"
-        }else if (status == "reschedule"){
-            holder.tvStatus.text = "Reschedule"
+        if (role != "admin"){
+            if (status != "ongoing"){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    holder.cvItem.setCardBackgroundColor(context.resources.getColor(R.color.gray, null))
+                }else{
+                    holder.cvItem.setCardBackgroundColor(context.resources.getColor(R.color.gray))
+                }
+                holder.itemView.isEnabled = false
+            }else{
+                holder.itemView.setOnClickListener {
+                    confirm(schedule)
+                }
+            }
+
+            if (status == "ongoing"){
+                holder.tvStatus.text = "Menunggu konfirmasi"
+            }else if (status == "attend"){
+                holder.tvStatus.text = "Hadir"
+            }else if (status == "reschedule"){
+                holder.tvStatus.text = "Reschedule"
+            }
+        }else{
+            holder.tvStatus.visibility = View.GONE
         }
     }
 

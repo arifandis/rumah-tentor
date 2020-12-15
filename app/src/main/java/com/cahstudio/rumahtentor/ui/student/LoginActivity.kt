@@ -9,13 +9,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.cahstudio.rumahtentor.R
+import com.cahstudio.rumahtentor.model.Tentor
 import com.cahstudio.rumahtentor.ui.admin.LoginAdminActivity
 import com.cahstudio.rumahtentor.ui.admin.MainAdminActivity
+import com.cahstudio.rumahtentor.ui.tentor.ChooseLevelActivity
 import com.cahstudio.rumahtentor.ui.tentor.LoginTentorActivity
 import com.cahstudio.rumahtentor.ui.tentor.MainTentorActivity
+import com.cahstudio.rumahtentor.ui.tentor.WaitingConfirmedActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -77,16 +79,18 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         mAuthStateListener = FirebaseAuth.AuthStateListener {
             if (it.currentUser != null){
                 val mode = mPref.getString("mode", "")
+                val status = mPref.getString("account_status", "")
                 if (mode?.isNotEmpty()!!){
                     var intent = Intent()
                     if (mode == "student"){
                         intent = Intent(this, MainActivity::class.java)
+                        updateToken(intent)
                     }else if (mode == "tentor"){
-                        intent = Intent(this, MainTentorActivity::class.java)
+                        getTentor(it.currentUser!!.uid)
                     }else if (mode == "admin"){
                         intent = Intent(this, MainAdminActivity::class.java)
+                        updateToken(intent)
                     }
-                    updateToken(intent)
                 }
             }
         }
@@ -110,6 +114,34 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     Toast.makeText(this, it1, Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    fun getTentor(uid: String){
+        mRef.child("tentor").child(uid).addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val tentor = snapshot.getValue(Tentor::class.java) ?: return
+                var intent = Intent()
+                if (tentor.account_status == "not confirmed"){
+                    intent = Intent(applicationContext,WaitingConfirmedActivity::class.java)
+                    intent.putExtra("uid", uid)
+                    startActivity(intent)
+                    finish()
+                }else{
+                    if (tentor.level != null && tentor.level.isEmpty()){
+                        intent = Intent(applicationContext, ChooseLevelActivity::class.java)
+                        updateToken(intent)
+                    }else if (tentor.level != null && tentor.level.isNotEmpty()){
+                        intent = Intent(applicationContext, MainTentorActivity::class.java)
+                        updateToken(intent)
+                    }
+                }
+            }
+
+        })
     }
 
     override fun onClick(p0: View?) {

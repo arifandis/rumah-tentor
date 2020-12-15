@@ -74,6 +74,9 @@ class MainTentorActivity : AppCompatActivity(), View.OnClickListener {
                         intent.putExtra("order_id", mTentor.current_order)
                         intent.putExtra("time", mOrder.time)
                         startActivity(intent)
+                    }else if (mTentor!!.status == "waiting confirm payment"){
+                        Toast.makeText(this, "Menunggu konfirmasi pembayaran dari Admin."
+                            , Toast.LENGTH_SHORT).show()
                     }
                 }else{
                     Toast.makeText(this, "Anda belum menerima pesanan."
@@ -94,6 +97,9 @@ class MainTentorActivity : AppCompatActivity(), View.OnClickListener {
                     val intent = Intent(this, AnswerQuestionActivity::class.java)
                     intent.putExtra("current_order", mTentor.current_order)
                     startActivity(intent)
+                }else if (mTentor!!.status == "waiting confirm payment"){
+                    Toast.makeText(this, "Menunggu konfirmasi pembayaran dari Admin."
+                        , Toast.LENGTH_SHORT).show()
                 }
             }
         }

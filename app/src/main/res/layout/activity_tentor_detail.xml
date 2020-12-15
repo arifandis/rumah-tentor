@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.admin.TentorDetailActivity"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/tentordetail_toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tentordetail_tvNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:text="Nama: "
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tentordetail_toolbar" />
+
+    <TextView
+        android:id="@+id/tentordetail_tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nama"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/tentordetail_tvNameLabel"
+        app:layout_constraintTop_toTopOf="@+id/tentordetail_tvNameLabel" />
+
+    <TextView
+        android:id="@+id/tentordetail_tvEmailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Email: "
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tentordetail_tvNameLabel" />
+
+    <TextView
+        android:id="@+id/tentordetail_tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/tentordetail_tvEmailLabel"
+        app:layout_constraintTop_toTopOf="@+id/tentordetail_tvEmailLabel" />
+
+    <TextView
+        android:id="@+id/tentordetail_tvBankNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Bank: "
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tentordetail_tvEmail" />
+
+    <TextView
+        android:id="@+id/tentordetail_tvBankName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bank"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/tentordetail_tvBankNameLabel"
+        app:layout_constraintTop_toTopOf="@+id/tentordetail_tvBankNameLabel" />
+
+    <TextView
+        android:id="@+id/tentordetail_tvAccountNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Nama Akun: "
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tentordetail_tvBankNameLabel" />
+
+    <TextView
+        android:id="@+id/tentordetail_tvAccountName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nama Akun"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/tentordetail_tvAccountNameLabel"
+        app:layout_constraintTop_toTopOf="@+id/tentordetail_tvAccountNameLabel" />
+
+    <TextView
+        android:id="@+id/tentordetail_tvAccountNumberLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Nomor Rekening: "
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tentordetail_tvAccountNameLabel" />
+
+    <TextView
+        android:id="@+id/tentordetail_tvAccountNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nomor Rekening"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/tentordetail_tvAccountNumberLabel"
+        app:layout_constraintTop_toTopOf="@+id/tentordetail_tvAccountNumberLabel" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Bukti KTM"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tentordetail_tvAccountNumber" />
+
+    <ImageView
+        android:id="@+id/tentordetail_ivKtm"
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/tentordetail_btnConfirm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_button_maroon"
+        android:text="konfirmasi"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/tentordetail_progressbar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:elevation="2dp"
+        android:indeterminateTint="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/tentordetail_btnConfirm"
+        app:layout_constraintEnd_toEndOf="@+id/tentordetail_btnConfirm"
+        app:layout_constraintStart_toStartOf="@+id/tentordetail_btnConfirm"
+        app:layout_constraintTop_toTopOf="@+id/tentordetail_btnConfirm"
+        tools:targetApi="lollipop" />
+</androidx.constraintlayout.widget.ConstraintLayout>

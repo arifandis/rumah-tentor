@@ -8,8 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cahstudio.rumahtentor.R
-import com.cahstudio.rumahtentor.model.UserMessage
-import com.cahstudio.rumahtentor.ui.adapter.UserMessageAdapter
+import com.cahstudio.rumahtentor.model.User
+import com.cahstudio.rumahtentor.ui.adapter.UserAdapter
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_chat_tentor.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -17,9 +17,9 @@ import kotlinx.android.synthetic.main.toolbar.*
 class ChatTentorActivity : AppCompatActivity() {
     private lateinit var actionBar: ActionBar
     private lateinit var mRef: DatabaseReference
-    private lateinit var mAdapter: UserMessageAdapter
+    private lateinit var mAdapter: UserAdapter
 
-    private var mMessageList = mutableListOf<UserMessage>()
+    private var mMessageList = mutableListOf<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class ChatTentorActivity : AppCompatActivity() {
         mRef = FirebaseDatabase.getInstance().reference
 
         val layoutManager = LinearLayoutManager(this)
-        mAdapter = UserMessageAdapter(this, mMessageList, {userMessage -> gotoChat(userMessage.uid) })
+        mAdapter = UserAdapter(this, mMessageList, { userMessage -> gotoChat(userMessage.uid) })
         chattentor_recyclerview.layoutManager = layoutManager
         chattentor_recyclerview.adapter = mAdapter
     }
@@ -62,7 +62,7 @@ class ChatTentorActivity : AppCompatActivity() {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (value in snapshot.children){
-                    val user = value.getValue(UserMessage::class.java) ?: return
+                    val user = value.getValue(User::class.java) ?: return
                     mMessageList.add(user)
                 }
                 mAdapter.notifyDataSetChanged()

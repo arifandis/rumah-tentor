@@ -1,6 +1,7 @@
 package com.cahstudio.rumahtentor.model
 
 data class Tentor(
+    val account_status: String?,
     val course: String?,
     val email: String?,
     val level: String?,
@@ -11,8 +12,9 @@ data class Tentor(
     val bank_account_name: String?,
     val current_order: String?,
     val status: String?,
-    var ktm: String?
+    var ktm: String?,
+    var rating: Long
 ){
-    constructor() : this("","","","","","",""
-        ,"","","","")
+    constructor() : this("","","","","","","",""
+        ,"","","","",0)
 }

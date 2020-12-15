@@ -187,11 +187,12 @@ class PaymentActivity : AppCompatActivity(), View.OnClickListener{
                         Log.d("uri", uri.toString())
                         mRef.child("order").child(mCurrentOrder).child("payment").setValue(uri.toString())
                         mRef.child("order").child(mCurrentOrder).child("payment_type").setValue("transfer")
-                        mRef.child("order").child(mCurrentOrder).child("status").setValue("waiting schedule")
-                        mOrder.student_uid?.let { it1 -> mRef.child("student").child(it1).child("status").setValue("waiting schedule") }
-                        mOrder.tentor_uid?.let { it1 -> mRef.child("tentor").child(it1).child("status").setValue("waiting schedule") }
+                        mRef.child("order").child(mCurrentOrder).child("status").setValue("waiting confirm payment")
+                        mOrder.student_uid?.let { it1 -> mRef.child("student").child(it1).child("status").setValue("waiting confirm payment") }
+                        mOrder.tentor_uid?.let { it1 -> mRef.child("tentor").child(it1).child("status").setValue("waiting confirm payment") }
                         payment_progressbar.visibility = View.GONE
                         payment_btnConfirm.text = "Konfirmasi"
+                        finish()
                     }else{
                         payment_progressbar.visibility = View.GONE
                         payment_btnConfirm.text = "Konfirmasi"
@@ -205,9 +206,9 @@ class PaymentActivity : AppCompatActivity(), View.OnClickListener{
         }else{
             mRef.child("order").child(mCurrentOrder).child("payment").setValue("")
             mRef.child("order").child(mCurrentOrder).child("payment_type").setValue("offline")
-            mRef.child("order").child(mCurrentOrder).child("status").setValue("waiting schedule")
-            mOrder.student_uid?.let { it1 -> mRef.child("student").child(it1).child("status").setValue("waiting schedule") }
-            mOrder.tentor_uid?.let { it1 -> mRef.child("tentor").child(it1).child("status").setValue("waiting schedule") }
+            mRef.child("order").child(mCurrentOrder).child("status").setValue("waiting confirm payment")
+            mOrder.student_uid?.let { it1 -> mRef.child("student").child(it1).child("status").setValue("waiting confirm payment") }
+            mOrder.tentor_uid?.let { it1 -> mRef.child("tentor").child(it1).child("status").setValue("waiting confirm payment") }
             payment_progressbar.visibility = View.GONE
             payment_btnConfirm.text = "Konfirmasi"
         }

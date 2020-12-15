@@ -60,16 +60,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.main_cvOrderTentor -> {
                 if (mStudent?.current_order != null && mStudent?.current_order!!.isNotEmpty()){
                     if (mStudent!!.status == "waiting"){
-                        Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan tunggu konfirmasi dari tentor."
+                        Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan tunggu konfirmasi dari Admin."
                             , Toast.LENGTH_SHORT).show()
                     }else if (mStudent!!.status == "payment"){
-                        Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan lakukan pembayan."
+                        Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan lakukan pembayaran."
                             , Toast.LENGTH_SHORT).show()
                     }else if (mStudent!!.status == "studying"){
                         Toast.makeText(this, "Anda sudah melakukan pemesanan. Silahkan lanjutkan belajar Anda."
                             , Toast.LENGTH_SHORT).show()
                     } else if (mStudent!!.status == "waiting schedule"){
                         Toast.makeText(this, "Tunggu jadwal dari Admin."
+                            , Toast.LENGTH_SHORT).show()
+                    } else if (mStudent!!.status == "waiting confirm payment"){
+                        Toast.makeText(this, "Menunggu konfirmasi pembayaran dari Admin."
                             , Toast.LENGTH_SHORT).show()
                     }
                 }else{
@@ -92,6 +95,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     } else if (mStudent!!.status == "waiting schedule"){
                         Toast.makeText(this, "Tunggu jadwal dari Admin."
                             , Toast.LENGTH_SHORT).show()
+                    }else if (mStudent!!.status == "waiting confirm payment"){
+                        Toast.makeText(this, "Menunggu konfirmasi pembayaran dari Admin."
+                            , Toast.LENGTH_SHORT).show()
                     }
                 }else{
                     Toast.makeText(this, "Anda belum melakukan pemesanan."
@@ -113,6 +119,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }else if (mStudent!!.status == "waiting schedule"){
                         Toast.makeText(this, "Anda sudah melakukan pembayaran."
                             , Toast.LENGTH_SHORT).show()
+                    }else if (mStudent!!.status == "waiting confirm payment"){
+                        Toast.makeText(this, "Anda sudah melakukan pembayaran, tunggu konfirmasi pembayaran dari Admin."
+                            , Toast.LENGTH_SHORT).show()
                     }
                 }else{
                     Toast.makeText(this, "Anda belum melakukan pemesanan."
@@ -133,6 +142,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         startActivity(intent)
                     }else if (mStudent!!.status == "waiting schedule"){
                         Toast.makeText(this, "Tunggu jadwal dari Admin."
+                            , Toast.LENGTH_SHORT).show()
+                    }else if (mStudent!!.status == "waiting confirm payment"){
+                        Toast.makeText(this, "Menunggu konfirmasi pembayaran dari Admin."
                             , Toast.LENGTH_SHORT).show()
                     }
                 }else{

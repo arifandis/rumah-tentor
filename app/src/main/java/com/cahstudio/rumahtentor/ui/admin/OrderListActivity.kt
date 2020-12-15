@@ -55,8 +55,8 @@ class OrderListActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         layoutManager.reverseLayout = true
         layoutManager.stackFromEnd = true
-        mAdapter = OrderAdapter(this, mOrderList, {}
-            , {})
+        mAdapter = OrderAdapter(this, mOrderList, {order -> acceptOrder(order) }
+            , {order -> rejectOrder(order) }, "admin")
         orderlist_recyclerview.layoutManager = layoutManager
         orderlist_recyclerview.adapter = mAdapter
     }
@@ -73,9 +73,9 @@ class OrderListActivity : AppCompatActivity() {
                 mOrderList.clear()
                 for (ds in snapshot.children){
                     val order = ds.getValue(Order::class.java) ?: return
-                    if (order.status == "waiting schedule"){
-                        mOrderList.add(order)
-                    }
+                    mOrderList.add(order)
+//                    if (order.status == "waiting schedule"){
+//                    }
                 }
 
                 mAdapter.notifyDataSetChanged()
@@ -84,5 +84,35 @@ class OrderListActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    fun acceptOrder(order: Order){
+        order.key?.let { mRef.child("order").child(it).child("status").setValue("ongoing") }
+        order.student_uid?.let { mRef.child("student").child(it).child("status")
+            .setValue("payment") }
+        order.tentor_uid?.let { mRef.child("tentor").child(it).child("status")
+            .setValue("waiting payment") }
+        order.tentor_uid?.let { mRef.child("tentor").child(it).child("current_order")
+            .setValue(order.key).addOnCompleteListener {
+                if (it.isSuccessful){
+                    Toast.makeText(applicationContext, "Pesanan diterima", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(applicationContext, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+                }
+            } }
+    }
+
+    fun rejectOrder(order: Order){
+        order.key?.let { mRef.child("order").child(it).child("status").setValue("reject") }
+        order.student_uid?.let { mRef.child("student").child(it).child("status")
+            .setValue("not studying") }
+        order.student_uid?.let { mRef.child("student").child(it).child("current_order")
+            .setValue("").addOnCompleteListener {
+                if (it.isSuccessful){
+                    Toast.makeText(applicationContext, "Pesanan ditolak", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(applicationContext, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+                }
+            } }
     }
 }

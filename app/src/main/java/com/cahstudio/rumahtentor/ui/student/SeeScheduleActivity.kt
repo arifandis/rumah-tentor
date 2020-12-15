@@ -14,7 +14,9 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cahstudio.rumahtentor.R
+import com.cahstudio.rumahtentor.model.Order
 import com.cahstudio.rumahtentor.model.Schedule
+import com.cahstudio.rumahtentor.model.Tentor
 import com.cahstudio.rumahtentor.ui.adapter.ScheduleAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -24,6 +26,8 @@ import kotlinx.android.synthetic.main.activity_see_schedule_tentor.schedule_recy
 import kotlinx.android.synthetic.main.dialog_give_rating.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 class SeeScheduleActivity : AppCompatActivity() {
     private lateinit var actionBar: ActionBar
@@ -31,7 +35,9 @@ class SeeScheduleActivity : AppCompatActivity() {
     private lateinit var mAdapter: ScheduleAdapter
     private lateinit var dialogConfirm: AlertDialog.Builder
     private lateinit var ratingDialog: Dialog
+    private lateinit var mOrder: Order
 
+    private var mTentor: Tentor? = null
     private var mOrderId: String? = null
     private var mSchedule: Schedule? = null
     private var mScheduleList = mutableListOf<Schedule>()
@@ -42,6 +48,8 @@ class SeeScheduleActivity : AppCompatActivity() {
 
         configureToolbar()
         initiliaze()
+        getOrderDetail()
+        getTentorDetail()
         initializeConfirmDialog()
         initializeRatingDialog()
         getSchedule()
@@ -70,7 +78,7 @@ class SeeScheduleActivity : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         mAdapter = ScheduleAdapter(this, mScheduleList, {schedule -> showConfirmDialog(schedule) }
-            , "student",{schedule,status -> },{schedule ->  })
+            , "student",{schedule ->  })
         mAdapter.time = time
         schedule_recyclerview.layoutManager = layoutManager
         schedule_recyclerview.adapter = mAdapter
@@ -78,6 +86,19 @@ class SeeScheduleActivity : AppCompatActivity() {
         schedule_btnRating.setOnClickListener {
             ratingDialog.show()
         }
+    }
+
+    fun getOrderDetail(){
+        mOrderId?.let { mRef.child("order").child(it).addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                mOrder = snapshot.getValue(Order::class.java)?: return
+            }
+
+        }) }
     }
 
     fun getSchedule(){
@@ -125,7 +146,7 @@ class SeeScheduleActivity : AppCompatActivity() {
 
     fun attended(dialog: DialogInterface){
         mOrderId?.let { mRef.child("order").child(it).child("schedule").child((mSchedule?.id?.minus(
-            1)).toString()).child("student").setValue("attend").addOnCompleteListener {
+            1)).toString()).child("status").setValue("attend").addOnCompleteListener {
             if (it.isSuccessful){
                 dialog.dismiss()
                 getSchedule()
@@ -138,7 +159,7 @@ class SeeScheduleActivity : AppCompatActivity() {
 
     fun reschedule(dialog: DialogInterface){
         mOrderId?.let { mRef.child("order").child(it).child("schedule").child((mSchedule?.id?.minus(
-            1)).toString()).child("student").setValue("reschedule").addOnCompleteListener {
+            1)).toString()).child("status").setValue("reschedule").addOnCompleteListener {
             if (it.isSuccessful){
                 dialog.dismiss()
                 getSchedule()
@@ -156,7 +177,8 @@ class SeeScheduleActivity : AppCompatActivity() {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.value == null){
+                val value = snapshot.getValue(Int::class.java)
+                if (value == 0){
                     schedule_btnRating.visibility = View.VISIBLE
                 }
             }
@@ -178,10 +200,31 @@ class SeeScheduleActivity : AppCompatActivity() {
         }
     }
 
+    fun getTentorDetail(){
+        mOrderId?.let {
+            mRef.child("tentor").child(it).addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    mTentor = snapshot.getValue(Tentor::class.java) ?: return
+                }
+
+            })
+        }
+    }
+
     fun giveRating(rating: Float){
-        mOrderId?.let { mRef.child("order").child(it).child("rating").setValue(rating)
+        mOrderId?.let { mRef.child("order").child(it).child("rating").setValue(rating.roundToLong())
             .addOnCompleteListener {
                 if (it.isSuccessful){
+                    mOrder?.tentor_uid?.let { it1 -> mRef.child("tentor").child(it1).child("rating")
+                        .setValue(rating.roundToInt())}
+                    mRef.child("tentor").child(mOrderId!!).child("rating").setValue(mTentor?.rating?.plus(
+                        rating.roundToLong()
+                    ))
+                    mRef.child("order").child(mOrderId!!).child("rating").setValue(rating.roundToLong())
                     schedule_btnRating.visibility = View.GONE
                     Toast.makeText(this, "Berhasil memberi rating", Toast.LENGTH_SHORT).show()
                     ratingDialog.dismiss()

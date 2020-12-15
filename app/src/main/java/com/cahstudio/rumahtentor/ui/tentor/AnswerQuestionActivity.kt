@@ -14,7 +14,6 @@ import com.cahstudio.rumahtentor.R
 import com.cahstudio.rumahtentor.model.*
 import com.cahstudio.rumahtentor.model.request.Request
 import com.cahstudio.rumahtentor.ui.adapter.MessageAdapter
-import com.cahstudio.rumahtentor.ui.adapter.UserMessageAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*

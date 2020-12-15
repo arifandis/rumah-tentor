@@ -54,8 +54,8 @@ class ListOrderActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         layoutManager.reverseLayout = true
         layoutManager.stackFromEnd = true
-        mAdapter = OrderAdapter(this, mOrderList, {order -> acceptOrder(order) }
-            , {order -> rejectOrder(order) })
+        mAdapter = OrderAdapter(this, mOrderList, {}
+            , {}, "tentor")
         listorder_recyclerview.layoutManager = layoutManager
         listorder_recyclerview.adapter = mAdapter
     }
@@ -72,8 +72,10 @@ class ListOrderActivity : AppCompatActivity() {
                     mOrderList.clear()
                     for (ds in snapshot.children){
                         val order = ds.getValue(Order::class.java) ?: return
-                        if (order.tentor_uid == mFirebaseUser?.uid){
-                            mOrderList.add(order)
+                        if (order.status == "ongoing"){
+                            if (order.tentor_uid == mFirebaseUser?.uid){
+                                mOrderList.add(order)
+                            }
                         }
                     }
 
