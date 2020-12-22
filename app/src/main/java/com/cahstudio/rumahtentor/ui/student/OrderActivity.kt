@@ -44,6 +44,7 @@ class OrderActivity : AppCompatActivity() {
     private var mCourseList = mutableListOf<Course>()
     private var mChooseCourseList = mutableListOf<Course>()
     private var mTentorList = mutableListOf<Tentor>()
+    private var mFixTentorList = mutableListOf<Tentor>()
     private var sCourseList = mutableListOf<String>()
     private var sTentorList = mutableListOf<String>()
 
@@ -247,6 +248,7 @@ class OrderActivity : AppCompatActivity() {
 
     fun getTentor(){
         mTentorList.clear()
+        mFixTentorList.clear()
         sTentorList.clear()
         sTentorList.add("Pilih tentor")
         sTentorAdapter.notifyDataSetChanged()
@@ -266,26 +268,25 @@ class OrderActivity : AppCompatActivity() {
                         tentor.rating = total
                     }
 
-                    mTentorList.add(tentor)
+                    mFixTentorList.add(tentor)
                 }
-                mTentorAdapter.notifyDataSetChanged()
 
-//                if (mCourseList.isNotEmpty()){
-//                    mTentorList.forEach {
-//                        val tentor = it.name+"-"+it.email
-//                        if (sCourse.isNotEmpty()){
-//                            var isContains = false
-//                            mChooseCourseList.forEach { course ->
-//                                isContains = it.course?.contains(course.id.toString())!!
-//                            }
-//
-//                            if (isContains){
-//                                sTentorList.add(tentor)
-//                            }
-//                        }
-//                    }
-//                    sTentorAdapter.notifyDataSetChanged()
-//                }
+                if (mCourseList.isNotEmpty()){
+                    mFixTentorList.forEach {
+                        val tentor = it
+                        if (sCourse.isNotEmpty()){
+                            var isContains = false
+                            mChooseCourseList.forEach { course ->
+                                isContains = it.course?.contains(course.id.toString())!!
+                            }
+
+                            if (isContains){
+                                mTentorList.add(tentor)
+                            }
+                        }
+                    }
+                    mTentorAdapter.notifyDataSetChanged()
+                }
             }
 
         })
